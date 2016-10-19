@@ -1,0 +1,9 @@
+
+<% @departments.each do |department| %>
+  <tr>
+    <td> <%= check_box_tag :checkbox, "checkbox" %></td>
+    <td> <%= department.department_name %></td>
+    
+  </tr>
+ 
+<% end %>

@@ -1,0 +1,141 @@
+
+<html>
+<body>
+
+</br>
+
+<div class="container">
+
+   <table border="0" cellspacing="0" cellpadding="0" width="100%">
+                                <tr>
+                                    <td align="left" class="heading" style="padding-top: 10px;">
+                                        <strong>Manage Users</strong>
+                                    </td>
+                                </tr>
+                                 
+                                  <tr>
+                                        <td align="center">&nbsp;</td>
+                                   </tr>
+                                 <div>
+                                  <tr align="left">
+                                      <td class="popupbg" style="padding: 10px;">
+                                            
+                                        <table>
+                                           <%#= form_tag(users_path, :method => "get", id: "search-form") do %>
+                                           <%= search_form_for @q do |f| %>
+                                             <tr>
+                                                <td align="left" width="05%">
+                                                  <%= f.label :name %>
+                                                </td>
+                                                <td align="left" valign="middle" style="padding-left: 10px;" width="40%">
+                                                 <%#= text_field "user", "name", "size" => 20 ,"style" => "width:230px;"%>
+                                                 <%#= text_field_tag :search, params[:search], placeholder: "Search users" %>
+                                                 <%= f.search_field :first_name_or_last_name_or_domain_name_cont %> (First Name, Last Name,domain_name) 
+                                                </td>
+                                                
+                                                 <td align="left" width="06%">
+                                                  <%= f.label :status %> <%#= f.label :status_cont %>
+                                                </td>
+                                                <td align="left" valign="middle" style="padding-left: 10px;" width="20%">
+                                                     <%= f.select "status_cont","<option>Active</option><option>InActive</option>".html_safe%>
+
+                                                </td>
+                                                <td align="left" valign="middle" style="padding-left: 10px;" width="10%">
+                                                  <%#= submit_tag "Search",{:class=>'buttons',:onclick=>"return loaduserdetails();"} %> 
+                                                 <%#= image_submit_tag 'search.png',{:name => 'operation',:class => 'buttons', :id => 'text_value',:onclick=>"return loaduserdetails();"} %>
+                                                  <%#= submit_tag "Search" %> 
+                                                  <%= image_submit_tag 'search.png' %>
+                                                 </td>
+                                            </tr>
+                                          <% end %>
+                                        </table>
+                                        
+                                    </td>
+                                 
+                                  </tr>
+                                  </div>
+                                   <tr>
+                                          <td height="25">&nbsp;</td>
+                                    </tr>
+   </table
+       
+  <div>
+    <%= link_to "New User", new_user_path, remote: true, class: "btn btn-primary"  %>
+     <%= link_to "Export",new_export_users_path,remote: true, class: "btn btn-primary"  %>
+  </div>
+  <br>
+  <div class="new-user"></div>
+  <div class="container" > 
+      <table align = "right" border = "0">
+               <tbody>
+                 <tr>
+                     <td>
+                      <b> <%= will_paginate @user ,:next_label => "&gt;&gt;" ,:previous_label => "&lt;&lt;" %> </b>
+                      </td>
+                   <tr>
+                </tbody>
+        </table>
+  <table class="table table-bordered table-striped">
+    <thead>
+     
+      <tr>
+      
+        <th width="20%" height="5" align="left"  valign="middle" bgcolor="#0370b5" class="whitetext">Name</th>
+        <th width="20%" height="28" align="left" valign="middle" bgcolor="#0370b5" class="whitetext">Email Id</th>
+        <th width="20%" height="28" align="left" valign="middle" bgcolor="#0370b5" class="whitetext">Domain name</th>
+        <th width="20%" height="28" align="left" valign="middle" bgcolor="#0370b5" class="whitetext">Is admin</th>
+        <th width="20%" height="28" align="left" valign="middle" bgcolor="#0370b5" class="whitetext">Status</th>
+        <td width="20%" height="28" align="left" valign="middle" bgcolor="#0370b5" class="whitetext">&nbsp;</td>
+        <td width="20%" height="28" align="left" valign="middle" bgcolor="#0370b5" class="whitetext">&nbsp;</td>
+        <td width="20%" height="28" align="left" valign="middle" bgcolor="#0370b5" class="whitetext">&nbsp;</td>
+      </tr>
+    </thead>
+    <tbody class="user-index">
+      <%= render "index" %>
+    </tbody>
+  </table>
+   
+   
+   <table align = "right" border = "0">
+               <tbody>
+                 <tr>
+                     <td>
+                        <b> <%= will_paginate @user ,:next_label => "&gt;&gt;" ,:previous_label => "&lt;&lt;" %> </b>
+                      </td>
+                   <tr>
+                </tbody>
+        </table>
+        
+   </table>
+
+
+</div>
+
+ 
+<div id="user-modal" class="modal fade"></div>
+</div>
+
+</html>
+</body>
+
+<script  type="text/javascript">
+
+         function loaduserdetails()
+          {
+                   alert ('hi');
+              //  var pars = document.getElementById("user_name").value;
+               var pars = "name=" + $F('user_name');
+               var myAjax = new Ajax.Updater("users",'/users/search_user_list',{
+               parameters:pars,
+               method:'get'
+               });
+               
+           }
+
+</script>
+
+
+
+
+
+ 

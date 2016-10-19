@@ -1,0 +1,18 @@
+
+
+<% @users.each do |user| %>
+  <tr>
+    <td><%= user.last_name.to_s.strip + ' ' +  user.first_name.to_s.strip  %></td>
+    <td><%= user.email %></td>
+    <td><%= user.domain_name %></td>
+    <td><%= user.is_admin ? 'Yes' : 'No' %></td>
+    <td><span id ='active' class ="Approve"> <%= user.status %> </span> </td>
+    <td> <%#= link_to "Assign Departments", edit_departments_user_path(user), remote: true, class: "btn btn-primary"  %>  
+    <%= link_to "Assign Departments", user_edit_department_path(user), remote: true, class: "btn btn-primary"  %>
+    </td>
+   
+    <td><%= link_to "Edit", edit_user_path(user), remote: true, class: "btn btn-default"%></td>
+    <td><%= link_to "Delete", user_delete_path(user), remote: true, class: "btn btn-danger" %></td>
+  </tr>
+<% end %>
+

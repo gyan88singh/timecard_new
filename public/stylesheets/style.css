@@ -1,0 +1,241 @@
+@charset "utf-8";
+/* CSS Document */
+
+body{
+	margin:0;
+	Padding:0;
+	font-family:Arial, Helvetica, sans-serif;
+	color:#6d6d6d;
+	background: #d3f2fb url(/images/mainbg.jpg) repeat-x;
+	font-size:16px;
+}
+.clor{
+	background:#49a6d0;
+	margin:0;
+	padding:0;
+}
+
+.logintext{
+	width:388px;
+	height:27px;
+	border:1px solid #c6dee5;
+	background:#fff;
+	padding: 0 0 0 7px;
+	font-size: 15px;
+	color: #abbbc0;
+	}
+
+.popupbody{
+	marigin:0;
+	padding:0;
+	font-family:Arial, Helvetica, sans-serif;
+	color:#6d6d6d;
+	font-size:15px;
+	background:#FFF}
+.rem{
+	font-family:Arial, Helvetica, sans-serif;
+	color:#2a7090;
+	font-size:14px;
+	text-decoration:none;
+	}
+	.forgot{
+	font-family:Arial, Helvetica, sans-serif;
+	color:#fff;
+	font-size:11px;
+	text-decoration:none;
+	font-weight:bold
+	
+	}
+	
+.forgot1{
+	color:#fff;
+	font-size:11px;
+	text-decoration:none;
+	font-weight:bold
+	}
+	.forgot1:hover{
+	color:#da4348;
+	font-size:11px;
+	text-decoration:none;
+	font-weight:bold
+	}
+.nav{
+	font-size:18px;
+	color:#000;
+	text-decoration:none;
+	font-weight:normal;
+}
+.nav:hover{
+	font-size:18px;
+	color:#da4348;
+	text-decoration:none;
+}	
+	.navselected{
+	font-size:18px;
+	color:#fff;
+	text-decoration:none;
+	font-weight:normal;
+}
+
+.textdate{
+	width:113px;
+	height:23px;
+	background:#f6f6f9;
+	border:1px solid #c4c5c6;
+	font-size:14px;
+	color:#878787;
+	font-weight:normal;
+	padding-left:7px
+}
+img{
+	border:0;
+}
+
+	.calhd{
+	font-size:14px;
+	color:#000;
+	text-decoration:none;
+	font-weight:bold;
+}	
+		.calhd1{
+	font-size:14px;
+	color:#FFF;
+	text-decoration:none;
+	font-weight:bold;
+}	
+
+		.calhd2{
+	font-size:13px;
+	color:#FFF;
+	text-decoration:none;
+	font-weight:bold;
+}
+.popuphd{
+	font-size:18px;
+	color:#FFF;
+	text-decoration:none;
+	
+	padding-left:15px
+}	
+.textpopup{
+	width:130px;
+	height:20px;
+	background:#f6f6f9 url(images/textdown.png) no-repeat 118px 8px ;
+	border:1px solid #c4c5c6;
+	font-size:14px;
+	color:#878787;
+	font-weight:normal;
+	padding-left:7px
+}
+
+.rothd{
+	font-size:15px;
+	color:#012f8c;
+	text-decoration:none;
+	
+}	
+.weektext{
+	width:40px;
+	height:20px;
+	background:#f6f6f9 url(images/textdown.png) no-repeat 118px 8px ;
+	border:1px solid #c4c5c6;
+	font-size:12px;
+	color:#878787;
+	font-weight:normal;
+	padding-left:7px
+}
+.rightbottom{
+	border-right: 1px solid #cfcfcf;
+	border-bottom:1px solid #cfcfcf;
+}
+.right{
+	border-right: 1px solid #cfcfcf;
+	
+}	
+.bottom{
+	
+	border-bottom:1px solid #cfcfcf;
+}
+.hd{ font-family:Gotham, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size:17px;
+	font-weight:bold;
+	color:#036eb2;}
+	.whitetext{ font-family:Gotham, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size:16px; text-indent:10px;
+	
+	color:#fff;}
+	.gridtext{ font-family:Gotham, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size:16px; text-indent:10px;
+	
+	color:#000;}
+	
+	/*Added by Gyan l*/
+.popupbg {
+    background-color: #62B4CC;
+    color: #2D2D2D;
+    font-size: 14px;
+    font-family: Arial;
+}	
+	.heading {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    color: #036eb2;
+}
+
+
+.Approve {
+    background: #7AC212;
+    border-radius: 5px 5px 5px 5px;
+    color: #FFFFFF;
+    padding: 2px 5px;
+    width: 52px;
+    display: inline-block;
+    text-shadow: 0 1px 0 #999;
+}
+
+
+.welcome {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.gridPager span
+{
+	/*background-color: #77cde5;
+	color: #fff;
+	border: 1px solid #77cde5;*/
+}
+
+.gridPagingRow {
+    padding-top: 2px;
+    display: block;
+    height: 15px;
+    font-weight: normal;
+    text-align: center;
+    text-decoration: none;
+    width: 100%;
+    color: #2b2a2a;
+    font-size: 12px;
+}
+	
+.gridhd {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    color: #FFFFFF;
+    text-decoration: none;
+    font-weight: bold;
+    background-color: #086CB7;
+    padding-left: 5px;
+}
+
+.logout {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    color: #FFFFFF;
+    text-decoration: none;
+}	
+	
+	
+	

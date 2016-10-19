@@ -1,0 +1,758 @@
+﻿body
+{
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	background: #cdc1c1 url(images/mainbg.jpg);
+	background-repeat: repeat-x;
+	scrollbar-face-color: #FAFAFA;
+	scrollbar-highlight-color: #FAFAFA;
+	scrollbar-shadow-color: #FAFAFA;
+	scrollbar-3dlight-color: #FAFAFA;
+	scrollbar-arrow-color: #BE0703;
+	scrollbar-track-color: #FAFAFA;
+	scrollbar-darkshadow-color: #FAFAFA;
+}
+
+.backgroundcss
+{
+	background: #cdc1c1 url(images/bg2.jpg);
+	background-repeat: repeat-x;
+}
+
+.DisabledLink {						/*Added by jyoti on 29th april*/
+   pointer-events: none;
+   cursor: default;
+}
+.errorlabel
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: Red;
+	text-decoration: none;
+}
+
+/* Master Page */
+.masterbg
+{
+	background: url("Images/topbg1.jpg");
+}
+.welcome
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	color: #FFFFFF;
+	text-decoration: none;
+}
+
+/* Menu Bar related CSS */
+.menubg
+{
+	background: url('Images/nav-bg1.jpg');
+}
+.visitedmenubg
+{
+	background: url('Images/visitednavbg.jpg');
+}
+.dynamicmenubg
+{
+	background: url('Images/nav-bg.jpg');
+	z-index: 1;
+}
+.dynamicvisitedmenubg
+{
+	background: url('Images/visitednavbg.jpg');
+	z-index: 1;
+}
+.nav
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.nav:hover
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	color: #000000;
+	text-decoration: none;
+}
+.navlink
+{
+	font-size:18px;
+	color:#000;
+	text-decoration:none;
+	font-weight:normal;
+}
+.navlink:hover
+{
+	font-size:18px;
+	color:#da4348;
+	text-decoration:none;
+}
+.navlink td td:hover
+{
+	font-size:18px;
+	background-color:white;
+	text-decoration:none;
+}
+	
+.navlinkselected
+{
+	font-size:18px;
+	color:#fff;
+	text-decoration:none;
+	font-weight:normal;
+}
+
+
+
+.logout
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	color: #FFFFFF;
+	text-decoration: none;
+}
+
+.td_loginbg
+{
+	background: url("Images/loginbg.png");
+	vertical-align: top;
+}
+.td_loginLineImage
+{
+	background: url("Images/line.jpg");
+	vertical-align: middle;
+}
+.label
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	color: #000000;
+	text-decoration: none;
+	font-weight: bold;
+}
+.labelred
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	color: #ff0000;
+	text-decoration: none;
+	font-weight: bold;
+}
+.labelWhite
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	color: #FFFFFF;
+	text-decoration: none;
+}
+
+/* CSS for modal popup */
+
+.modalpoptopmidimg
+{
+	background-image: url('Images/pop-top-mid.gif');
+}
+
+.modalpoptopleftimg
+{
+	background-image: url('Images/pop-top-left.gif');
+}
+
+
+.modalpoptoprightimg
+{
+	background-image: url('Images/pop-top-right.gif');
+}
+
+.modalpopleftimg
+{
+	background-image: url('Images/pop-left.gif');
+}
+
+.modalpoprightimg
+{
+	background-image: url('Images/pop-right.gif');
+}
+
+.modalpopbotmidimg
+{
+	background-image: url('Images/pop-bot-mid.gif');
+}
+
+.modalpopbotleftimg
+{
+	background-image: url('Images/pop-bot-left.gif');
+}
+
+.modalpopbotrightimg
+{
+	background-image: url('Images/pop-bot-right.gif');
+}
+
+.modalpopbotleftimg
+{
+	background-image: url('Images/pop-bot-left.gif');
+	border-right:none;
+}
+
+
+.modalpoprightimg
+{
+	background-image: url('Images/pop-right.gif');
+}
+
+
+/* CSS for Modal Window */
+
+.modalpopup
+{
+	border: 1px solid #340101;
+}
+
+
+.pop-header
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 15px;
+	color: #FFFFFF;
+	text-decoration: none;
+	font-weight: bold;
+}
+.pop-text
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #000000;
+	text-decoration: none;
+}
+
+.ModalBackground
+{
+	position: fixed;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	overflow: hidden;
+	padding: 0;
+	margin: 0;
+	background-color: #FFFFFF;
+	z-index: 1000;
+	filter: alpha(opacity=70);
+	opacity: 0.7;
+}
+
+
+
+/* Grid */
+.listviewItemTemplate
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #000000;
+	text-decoration: none;
+	padding-left: 7px;
+	font-weight: normal;
+	text-align: left;
+	background-color: #f0f5e5;
+	height: 25px;
+	padding: 0px 2px 0px 2px;
+}
+.listviewAlternatingItemTemplate1
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #000000;
+	text-decoration: none;
+	padding-left: 7px;
+	font-weight: normal;
+	text-align: left; /*background-color: #f1f1f1;*/
+	background-color: white;
+	height: 25px;
+	padding: 0px 2px 0px 2px;
+}
+.gridtopmidimg
+{
+	background-image: url('Images/gridtopmid.gif');
+}
+.gridbotmidimg
+{
+	background-image: url('Images/gridbotmid.gif');
+}
+
+
+/* Inner pages */
+.heading
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 18px;
+	color: #036eb2;
+	text-decoration: none;
+	padding:5px;
+}
+.tblmain
+{
+    margin-top:20px;
+}
+
+.headerbar
+{
+	background: url('Images/nav-bg.jpg');
+	color: White;
+	height: 20px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	padding-left: 5px;
+}
+.separatorbar
+{
+	background: url('Images/nav-bg.jpg');
+	color: White;
+	height: 5px;
+	font-family: Arial, Helvetica, sans-serif;
+	padding-left: 5px;
+}
+.labelheader
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #6F0000;
+	text-decoration: none;
+}
+.labeltext
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	color: #000000;
+	text-decoration: none;
+}
+.labeltextprofile
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #000000;
+	text-decoration: none;
+}
+
+.link
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	color: Red;
+	text-decoration: none;
+}
+.link:hover
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	color: Red;
+	text-decoration: none;
+}
+
+.popupMid1
+{
+	background: url('Images/popupmid1.gif');
+}
+.popupleft
+{
+	background: url('Images/popupleft.gif');
+}
+.popupbg
+{
+	background-color: #62B4CC;
+	color:#2D2D2D;
+	font-size:14px;
+	font-family: Arial;
+}
+.popupline1bg
+{
+	background-color: #998888;
+}
+.popupline2bg
+{
+	background-color: #FEFEFE;
+}
+.popupright
+{
+	background: url('Images/popupright.gif');
+}
+.popupMid2
+{
+	background: url('Images/popupmid2.gif');
+}
+.line1
+{
+	background-color: #998888;
+	height: 1;
+}
+.line2
+{
+	background-color: #FEFEFE;
+	height: 1;
+}
+.gridhd
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #FFFFFF;
+	text-decoration: none;
+	font-weight: bold;
+	background-color: #086CB7;
+	padding-left:5px;
+}
+.gridhd a
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #FFFFFF;
+	text-decoration: none;
+	font-weight: bold;
+	background-color: #086CB7;
+	padding-left:5px;
+}
+.gridhd:hover
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #FFFFFF;
+	text-decoration: none;
+	font-weight: bold;
+	background-color: #086CB7;
+	padding-left:5px;
+}
+.gridtext
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #3b3b3b;
+	text-decoration: none;
+}
+.gridtext1
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #460606;
+	text-decoration: none;
+}
+.chpass
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #2d2c2c;
+	text-decoration: none;
+}
+.gridrow
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	color: #2d2d2d;
+	text-decoration: none;
+	background-color: #eef5f9;
+}
+.gridalternaterow
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	color: #2d2d2d;
+	text-decoration: none;
+	background-color: #c0e4fc;
+}
+
+.gridrow td
+{
+	padding-left:5px;
+}
+
+.gridalternaterow td
+{
+	padding-left:5px;
+}
+
+.multiselectdiv
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	background-color: #ffffff;
+	border: solid 1px #7890a7;
+	height: 200px;
+	z-index: 1;
+	position: absolute;
+	overflow: auto;
+}
+
+
+.errorhd
+{
+	font-family: Aria;
+	font-size: 30px;
+	color: #342e17;
+	text-decoration: none;
+	font-weight: bold;
+	padding-left: 7px;
+}
+.msgerror
+{
+	font-family: Aria;
+	font-size: 17px;
+	color: #831111;
+	text-decoration: none;
+	font-weight: bold;
+	padding-left: 7px;
+}
+.plaintext
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	color: #000000;
+	text-decoration: none;
+}
+.mandatory
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color: Red;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+
+
+/*Progress image */
+.Progress
+{
+	background-color: #CF4342;
+	color: White;
+	width: 105px;
+}
+
+
+
+.Progress img
+{
+	vertical-align: middle;
+	margin: 2px;
+}
+
+
+
+.progressBackgroundFilter
+{
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	overflow: hidden;
+	padding: 0;
+	margin: 0;
+	background-color: #000;
+	filter: alpha(opacity=50);
+	opacity: 0.5;
+	z-index: 1000;
+}
+/*
+.processMessage {   
+
+position: absolute;
+top:30%;   
+left:43%;  
+padding:1px;  
+z-index:1001;  
+background-color:#fff;  
+font-size:28px;
+}
+*/
+
+/*ADDED BY PRATIK KARADKAR*/
+/*
+.processMessage {
+
+position: absolute;
+top:50%;
+left:50%;
+padding:1px;
+z-index:100001;
+background-color:#fff;
+font-size:28px;
+
+}*/
+
+.processMessage
+{
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	padding: 1px;
+	z-index: 100001; /* background-color:#fff;*/
+	background-color: Transparent;
+	font-size: 28px;
+	border-radius: 8px;
+	border: 0px solid rgb(176, 40, 26);
+}
+
+
+
+/* profile menu */
+.profilemenubg
+{
+	background: url('Images/nav-bg.jpg');
+	text-align: right;
+}
+.visitedprofilemenubg
+{
+	background: url('Images/visitednavbg.jpg');
+}
+.dynamicprofilemenubg
+{
+	background: url('Images/nav-bg.jpg');
+	z-index: 1;
+	text-align: left;
+}
+.dynamicvisitedprofilemenubg
+{
+	background: url('Images/visitednavbg.jpg');
+	z-index: 1;
+}
+.profilenav
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	color: #FFFFFF;
+	text-decoration: none;
+	text-align: left;
+}
+.profilenav:hover
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	color: #000000;
+	text-decoration: none;
+}
+.profilenavlink
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.profilenavlink:hover
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	color: #000000;
+	text-decoration: none;
+}
+/* profile menu */
+
+
+
+/* group header */
+.grid .group span
+{
+	padding: 10px 0px 2px 0px; /*color:#666666;*/
+	text-align: left;
+	font-size: 13px; /*font-weight:bold;*/
+	font-family: Arial, Helvetica, sans-serif;
+	cursor: pointer;
+}
+.grid .group img
+{
+	cursor: pointer;
+}
+
+.header .content
+{
+	height: 35px;
+	color: Maroon;
+	text-align: left;
+	font-size: large;
+	font-style: inherit;
+}
+/* End of Added styles for Master-Detail Grid*/
+/**/
+.more
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	color: Black;
+	text-decoration: none;
+}
+
+
+/*ADDED BY PRATIK KARADKAR*/
+.gridwrap
+{
+	word-break: break-all;
+	word-wrap: break-word;
+}
+
+
+/*Added by Ajit, 15-Jan-2014*/
+.Popup-TopLeft
+{
+	background: url('Images/popuplefttop.gif');
+}
+
+.Popup-TopRt
+{
+	background: url('Images/popuprighttop.gif');
+}
+/*End*/
+
+.Modal_TopLeft
+{
+   background: url('Images/pop-top-left.gif');	
+}
+
+
+
+/* Added by Ajit 2-Apr-2014, Paging Css*/
+
+.gridPager a, .gridPager span
+{
+	display: block;
+	height: 15px;
+	font-weight: bold;
+	text-align: center;
+	text-decoration: none;
+}
+.gridPager a
+{
+	width: 15px;
+	background-color: #f5f5f5;
+	color: #969696;
+	border: 1px solid #969696;
+}
+.gridPager span
+{
+	/*background-color: #77cde5;
+	color: #fff;
+	border: 1px solid #77cde5;*/
+}
+
+/*End*/
+
+.Approve {
+	background:#7AC212;
+	/* border-radius: 5px 5px 5px 5px;*/
+    color: #FFFFFF;
+	padding: 2px 5px;
+	width:52px;
+	display:inline-block;
+	text-shadow: 0 1px 0 #999;
+}
+.Block {
+	background:#E00000;
+	/*border-radius: 5px 5px 5px 5px;*/
+    color: #FFFFFF;
+	padding: 2px 5px;
+	width:52px;
+	display:inline-block;
+	text-shadow: 0 1px 0 #999;
+}

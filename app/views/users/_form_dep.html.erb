@@ -1,0 +1,38 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+  <%#raise @userdep.inspect%>
+   <%= form_for(@userdep) do |u| %>
+  <div class="modal-header">
+    <h3>Assign Department To Users</h3>
+  </div>
+  <div class="modal-body">
+       <table border="0" cellpadding="0" cellspacing ="0" width ="50%">
+          
+          <tbody>
+               <%#= render "index_dep" %>
+              
+  
+  
+               <% for department in Department.all %>
+                 <div>
+                    <tr>
+                      <td>   <%= check_box_tag "user[department_ids][]", department.id, @userdep.departments.include?(department) %> </td> 
+                      <td>    <%= department.department_name %> </td> 
+                    </tr>
+                 </div>
+               <% end %>
+        
+          </tbody>
+        </table>
+  </div>
+  <div class="modal-footer">
+       
+       <%#= link_to "Save", user_update_department_path(@user), remote: true, class: "btn btn-danger" %>
+     <%= u.submit  %>
+      <%#= link_to "Save", {:action => 'update',:controller => 'users' }, class: "btn" %>
+     <%= link_to "Cancel", "#", class: "btn", data: {dismiss: "modal"} %>
+  </div>
+         <% end %>
+  </div>
+  
+</div>

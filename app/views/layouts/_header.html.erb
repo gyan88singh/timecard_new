@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+  <head>
+    <%#= stylesheet_link_tag "style" %>
+  </head>
+  
+  <body>
+    <% if current_user %>
+          <table width="100%" border="0" cellspacing="0" cellpadding="0" >
+            <tr>
+                <td align="center" valign="top">
+                <table width="1202" border="0" cellspacing="0" cellpadding="0" style="margin-top: 10px;">
+                        <tr>
+                            <td>
+                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                    <tr>
+                                           <td width="65%" height="81" align="left">
+                                              <img src="images/Attendance Reporting System.png" width="353" height="37" />
+                                        
+                                           </td>
+                                        <td width="35%" align="right" valign="middle"  >
+                                            <table >
+                                             <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <span class="welcome">Welcome <strong>
+                                                         <% name =  current_user.first_name + ' ' + current_user.last_name %>
+                                                           <%= link_to name,{:action => "my_account",:controller => "users"},:style=>"color:#FBD84B;" %>   
+                                                         </strong></span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <%last_login_time = LoginDetail.get_last_login_time(session[:user_id])%>
+                                                         <%# raise last_login_time.login_time.strftime("%B %e, %Y").inspect %>
+                                                        
+                                                        <span id="ctl00_lblLastLogin" class="welcome">Last Login: <%= showdatetime(last_login_time.login_time)%></span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                       <%= link_to "Log out", log_out_path ,:class=> "logout"%>   
+                                                     </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                 </td>
+               </tr>
+             </table>
+              
+              </br>
+               </br>
+             
+                <div class="container">
+                    <table width="990" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                   
+                            <td align="left" width="100%">
+ 							
+ 							   <tr>
+									<td style="white-space:nowrap;width:100%;">
+									    <%= link_to 'Master Administration',{:action => "index",:controller => "users"},:style=>"padding-right: 100px;" %> 
+									     <%= link_to 'Import',{:action => "index",:controller => "employees"},:style=>"padding-right: 100px;" %>
+									     <%= link_to 'Report',{:action => "time_home",:controller => "time_reports"},:style=>"padding-right: 100px;" %>
+									   
+				                     </td>
+							   </tr>
+						   </td>
+					   </tr>
+				  </table>
+	           </div>
+    
+    
+    <%else%>
+    
+       <table width="100%" border="0" cellspacing="0" cellpadding="0" >
+            <tr>
+                <td align="center" valign="top">
+                <table width="1202" border="0" cellspacing="0" cellpadding="0" style="margin-top: 10px;">
+                        <tr>
+                            <td>
+                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                    <tr>
+                                           <td width="65%" height="81" align="left">
+                                              <img src="images/Attendance Reporting System.png" width="353" height="37" />
+                                        
+                                           </td>
+                                        <td width="35%" align="right" valign="middle"  >
+                                            <table >
+                                             <tbody>
+                                                     <span class="welcome">Welcome <b><%=ENV['USERNAME']%></b> <strong>
+                                                           
+                                                         </strong></span>                                        
+                                               
+                                              </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                 </td>
+               </tr>
+             </table>
+              
+              </br>
+               </br>
+             
+                <div class="container">
+                    <table width="990" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                   
+                            <td align="left" width="100%">
+ 							
+ 							   <tr>
+									<td style="white-space:nowrap;width:100%;">
+									   
+									     <%= link_to 'Report',{:action => "time_home",:controller => "time_reports"},:style=>"padding-right: 100px;" %>
+									   
+				                     </td>
+							   </tr>
+						   </td>
+					   </tr>
+				  </table>
+	           </div>
+    
+    
+    
+    <% end %>
+    
+</body>
+</html>
