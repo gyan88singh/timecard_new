@@ -2,7 +2,7 @@
 lock '3.4.1'
 
 set :application, 'Timecard'
-set :repo_url, 'git@github.com:gyan88singh/Timecard.git'
+set :repo_url, 'git@github.com:gyan88singh/timecard_new.git'
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
