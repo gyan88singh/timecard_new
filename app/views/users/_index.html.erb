@@ -6,7 +6,13 @@
     <td><%= user.email %></td>
     <td><%= user.domain_name %></td>
     <td><%= user.is_admin ? 'Yes' : 'No' %></td>
-    <td><span id ='active' class ="Approve"> <%= user.status %> </span> </td>
+    <td> <% if user.status == 'Active'%>
+    	 <span id ='active' class ="Approve"> <%= user.status %> </span> 
+        <% else %>
+        
+        <span id ='active' class ="Block"> <%= user.status %> </span> 
+    	<% end%> 
+    </td>
     <td> <%#= link_to "Assign Departments", edit_departments_user_path(user), remote: true, class: "btn btn-primary"  %>  
     <%= link_to "Assign Departments", user_edit_department_path(user), remote: true, class: "btn btn-primary"  %>
     </td>

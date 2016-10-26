@@ -51,32 +51,59 @@ class User < ActiveRecord::Base
               # Redundant? Sure - the code will be 0 and the message will be "Success".
         puts "Connection successful!  Code:  #{ldap.get_operation_result.code}, message: #{ldap.get_operation_result.message}"
        
-        # GET THE DISPLAY NAME AND E-MAIL ADDRESS FOR A SINGLE USER
-       # search_param = username
-       # result_attrs = ["displayName"]
-        
-        # Build filter
-       # search_filter = Net::LDAP::Filter.eq("sAMAccountName", search_param)
-        
-        # Execute search
-       # if ldap.search(:filter => search_filter, :attributes => result_attrs, :return_result => false)
-        #  puts "SUHAS DABHADE"
           return true
-      #  else
-       #   puts "DABHADE SUHAS"
-       #   return false
-      #  end
-      #  puts 'i am outside'
         
       else
         
         puts "Connection failed!  Code:  #{ldap.get_operation_result.code}, message: #{ldap.get_operation_result.message}"
         return false
       end
-      
-     
-      
     end
+
+  def self.domain_authentication(username)
+     
+       ldap = Net::LDAP.new :host => SERVER,:port => PORT, :base => BASE, :domain => DOMAIN,:auth => {
+                                                                                            :method => :simple,
+                                                                                            :username =>'suhas.dabhade@tandon.local',
+                                                                                            :password => 'Infinx@10'
+                                                                                            }
+           
+                             
+       if ldap.bind 
+         
+        # and user = ldap.search(:filter => "sAMAccountName=#{username}")
+        
+               # Redundant? Sure - the code will be 0 and the message will be "Success".
+         puts "Connection successful!  Code:  #{ldap.get_operation_result.code}, message: #{ldap.get_operation_result.message}"
+        
+         # GET THE DISPLAY NAME AND E-MAIL ADDRESS FOR A SINGLE USER
+        # search_param = username
+        # result_attrs = ["displayName"]
+         
+         # Build filter
+        # search_filter = Net::LDAP::Filter.eq("sAMAccountName", search_param)
+         
+         # Execute search
+        # if ldap.search(:filter => search_filter, :attributes => result_attrs, :return_result => false)
+         #  puts "SUHAS DABHADE"
+           return true
+       #  else
+        #   puts "DABHADE SUHAS"
+        #   return false
+       #  end
+       #  puts 'i am outside'
+         
+       else
+         
+         puts "Connection failed!  Code:  #{ldap.get_operation_result.code}, message: #{ldap.get_operation_result.message}"
+         return false
+       end
+       
+      
+       
+     end
+
+
     
     def self.domain_search(user1)
      

@@ -30,10 +30,9 @@ class UsersController < ApplicationController
    end
  
    def create
-     @users = User.all
-      if  @user = User.create(user_params)
-        redirect_to :action=>'index'
-      end
+     @users = User.where("domain_name !=?",'').paginate(page: params[:page], per_page: 4).order(id: :asc)
+        @user = User.create(user_params)
+        
    end
  
    def edit
@@ -41,12 +40,10 @@ class UsersController < ApplicationController
    end
  
    def update
-     @users = User.all
+     @users = User.where("domain_name !=?",'').paginate(page: params[:page], per_page: 4).order(id: :asc)
      @user = User.find(params[:id])
      
-    if  @user.update_attributes(user_params)
-      redirect_to :action=>'index'
-    end
+      @user.update_attributes(user_params)
      
    end
  
@@ -100,8 +97,8 @@ class UsersController < ApplicationController
  private
    def user_params
      #raise params.inspect
-   #  params.require(:user).permit(:first_name, :last_name,:domain_name,:email,:password,:password_confirmation,:is_admin,:status,:created_by,:updated_by)
-     params.require(:user).permit!
+     params.require(:user).permit(:first_name, :last_name,:domain_name,:email,:password,:password_confirmation,:is_admin,:status,:created_by,:updated_by,:department_ids,{department_ids: []})
+ #    params.require(:user).permit!
    end
   
   def user_params1

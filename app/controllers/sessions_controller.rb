@@ -4,11 +4,48 @@ class SessionsController < ApplicationController
  
    
    def new
-  
+       if (Rails.configuration.domain_authentication == true)
+     
      render :layout=> false
+     else
+       username1 = ENV['USERNAME']
+         
+             username = username1
+             
+            domain = '@tandon.local' 
+            
+           user = username + domain 
+          
+           if (User.domain_authentication(user)) 
+               
+                   if( User.db_authenticates(username))
+             
+                #if user && userdb
+                 
+                       redirect_to :action => 'time_home', :controller=>"time_reports",:notice => "Logged in!"
+                   else
+                     render :action => "index", :layout => false
+                   end
+                #elsif user && !userdb
+             
+                   #   flash[:error] = "You are not authorized user For ARS"
+                      
+                        #render :action => "index", :layout => false
+                #elsif !user 
+                #     render :action => "index_AD", :layout => false  
+                     
+                  # redirect_to :action => 'login',:controller => 'logins' 
+                  
+                else
+                  render :action => "index_AD", :layout => false 
+                end   
+              
+     end
+     
    end
  
  def create
+        if (Rails.configuration.domain_authentication == true)
      # username1 = ENV['USERNAME']
        # raise user.inspect    "gyanprakash.singh"
           username = params[:User][:domain_name]
@@ -39,7 +76,7 @@ class SessionsController < ApplicationController
          # redirect_to :action => 'login',:controller => 'logins' 
          
        end
-        
+    end
  end
  
  def destroy
