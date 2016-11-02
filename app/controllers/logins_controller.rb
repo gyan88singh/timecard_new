@@ -27,7 +27,8 @@ class LoginsController < ApplicationController
    else
     
      flash[:notice] = "Invalid User/Password Combination."
-     redirect_to root_url
+      redirect_to "/logins/login"
+
  
    end
  end

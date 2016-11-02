@@ -11,7 +11,7 @@ class SessionsController < ApplicationController
        username1 = ENV['USERNAME']
          
              username = username1
-             
+             raise username.inspect
             domain = '@tandon.local' 
             
            user = username + domain 
@@ -61,7 +61,7 @@ class SessionsController < ApplicationController
        userdb = User.db_authenticates(username)
     
        if user && userdb
-        # session[:user_id] = userdb.id
+          session[:user_id] = userdb.id
            #raise  session[:user_id].inspect
          redirect_to :action => 'time_home', :controller=>"time_reports",:notice => "Logged in!"
          
