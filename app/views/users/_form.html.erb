@@ -41,7 +41,9 @@
         
         <div class="form-group">
           <%= f.label :status, class: "control-label" %>
-          <%= f.select :status,"<option>Active</option><option>In-Active</option>".html_safe%></P>
+          <%#= f.select :status,"<option>Active</option><option>In-Active</option>".html_safe%>
+          <%= f.select :status, options_for_select(["Active", "In-Active"], :selected => @user.status)%></p>
+
         </div>
         
       

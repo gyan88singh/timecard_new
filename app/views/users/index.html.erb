@@ -19,38 +19,8 @@
                                  <div>
                                   <tr align="left">
                                       <td class="popupbg" style="padding: 10px;">
-                                            
-                                        <table>
-                                           <%#= form_tag(users_path, :method => "get", id: "search-form") do %>
-                                           <%= search_form_for @q do |f| %>
-                                             <tr>
-                                                <td align="left" width="05%">
-                                                  <%= f.label :name %>
-                                                </td>
-                                                <td align="left" valign="middle" style="padding-left: 10px;" width="40%">
-                                                 <%#= text_field "user", "name", "size" => 20 ,"style" => "width:230px;"%>
-                                                 <%#= text_field_tag :search, params[:search], placeholder: "Search users" %>
-                                                 <%= f.search_field :first_name_or_last_name_or_domain_name_cont %> (First Name, Last Name,domain_name) 
-                                                </td>
-                                                
-                                                 <td align="left" width="06%">
-                                                  <%= f.label :status %> <%#= f.label :status_cont %>
-                                                </td>
-                                                <td align="left" valign="middle" style="padding-left: 10px;" width="20%">
-                                                     <%= f.select "status_eq","<option>Active</option><option>In-Active</option>".html_safe%>
-
-                                                </td>
-                                                <td align="left" valign="middle" style="padding-left: 10px;" width="10%">
-                                                  <%#= submit_tag "Search",{:class=>'buttons',:onclick=>"return loaduserdetails();"} %> 
-                                                 <%#= image_submit_tag 'search.png',{:name => 'operation',:class => 'buttons', :id => 'text_value',:onclick=>"return loaduserdetails();"} %>
-                                                  <%#= submit_tag "Search" %> 
-                                                  <%= image_submit_tag 'search.png' %>
-                                                 </td>
-                                            </tr>
-                                          <% end %>
-                                        </table>
-                                        
-                                    </td>
+                                            <%= render "search_user_form" %>      
+                                      </td>
                                  
                                   </tr>
                                   </div>

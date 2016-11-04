@@ -6,7 +6,7 @@ class UsersController < ApplicationController
    # if params[:q] 
           @q = User.ransack(params[:q])
           #  raise @q.result.where("domain_name !=?",'').inspect
-          @users = @q.result.where("domain_name !=?",'').paginate(page: params[:page], per_page: 4).order(id: :asc)
+          @users = @q.result.where("domain_name !=?",'').paginate(page: params[:page], per_page: 5).order(id: :asc)
  # else     
         #  @userss = User.order(:id)
         #  @users1 = User.all.paginate(page: params[:page], per_page: 4)
