@@ -3,19 +3,29 @@ class TimeSheetsController < ApplicationController
   
   
   def import
-   # raise params[:file1].inspect
+       # raise params[:file1].inspect
     if (params[:file1])
     
     # begin
-       TimeSheet.import(params[:file1])
-        flash[:notice] = 'Time Sheet imported.'
+       @timesheet = TimeSheet.import(params[:file1])
+         
+      if  @timesheet == true
+        flash[:notice] = 'TIME SHEET IMPORTED.'
         redirect_to employees_path
-    else
-    # rescue
+      else
+       # rescue
        #flash[:notice] = 'Invalid  file format.'
-              redirect_to employees_path
-     end
-   end
+        render :action => "import_timesheet_error"
+      end
+    else
+       redirect_to employees_path
+    end 
+       
+  end
+
+  def show
+    redirect_to employees_path
+  end
    
   def create
          @timesheets = TimeSheet.all

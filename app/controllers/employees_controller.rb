@@ -1,13 +1,19 @@
 class EmployeesController < ApplicationController
   before_filter :authorize
   
-  def import
+   def import
     if params[:file]
    
     #begin
-       Employee.import(params[:file])
-       flash[:notice] = 'employees imported.'
-       redirect_to employees_path
+      @employee =  Employee.import(params[:file])
+       if  @employee == true
+         flash[:notice] = 'EMPLOYEES DATA IMPORTED.'
+         redirect_to employees_path
+       else 
+        # flash[:notice] = 'ARS error.'
+         
+         render :action => "import_error"
+       end
    # rescue
      # flash[:notice] = 'Invalid  file format.'
      #        redirect_to employees_path
@@ -16,6 +22,10 @@ class EmployeesController < ApplicationController
     else
       redirect_to employees_path
     end
+  end
+  
+  def show
+    redirect_to employees_path
   end
   
   def create

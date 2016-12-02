@@ -1,0 +1,298 @@
+<div id="ctl00_ContentPlaceHolder1_UpdatePanel2" class ="container">
+<br>
+	
+                        <table border="0" cellspacing="0" cellpadding="0" width="1100px" class="tblmain">
+                            <tr>
+                                <td align="left" class="heading" style="padding-top: 10px;">
+                                    <strong>Import Employee Demographics / Timesheet</strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="background: #62B4CC; color: #FFF; padding: 10px;" align="left">
+                                    <table border="0" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <td width="35%">
+                                                Choose the file you would like to import :
+                                            </td>
+                                            <td width="5%">
+                                                
+                                              <%= radio_button_tag 'import', 'employee', true %>
+                                            </td>
+                                            <td width="25%">
+                                                Import Employee Demographics
+                                            </td>
+                                            <td width="5%">
+                                                 <%= radio_button_tag 'import', 'timesheet' %>
+                                            </td>
+                                            <td width="21%">
+                                                Import Time Sheet
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                           
+                           <tr>
+                             <td class="popupbg" style="padding: 10px; background-color: #E8F4F7 !important;"
+                                    align="left">
+							 <div id="importemployee">
+								  <p align='center'>Import Employees Sheet</p>
+								 <%= form_tag import_employees_path, multipart: true,:name=>"myform", :id=>"myform" do  %>
+                                 <table border="0" width="100%">
+								   <tr>
+                                           <td align="left" width=11%" height="20" valign="middle">
+                                             Select a file:
+                                            </td>
+											
+									<td align="left" valign="middle" style="padding-left: 10px;" width="36%" height="28">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                              <tr>
+                                                  <td valign="bottom">
+                                                       <%= file_field_tag :file %>
+                                                   </td>
+                                               </tr>
+                                               <tr>
+                                                   <td height="1">
+                                                   </td>
+                                               </tr>
+                                               <tr>
+                                                    <td valign="top">
+                                                     <span id="ctl00_ContentPlaceHolder1_lblUploadFile" style="color:Black;">(Please upload .xls / .xlsx /.csv file only)</span><br>
+                                                                                           
+                                                    </td>
+                                                </tr>
+           
+                                              </table>
+                                    </td>
+                                    <div id="div1">
+                                     <td valign="middle" style="padding-left: 0px;" width="48%" align="left">
+                                                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                        <tr>
+                                                            <td align="left">
+                                                                <span id="ctl00_ContentPlaceHolder1_lblResult"></span>
+
+                                                                 <span id="lblError" style="color: red;"></span>
+                                                                <span id="reguploadFileemp" style="color:Red;display:none;">Please upload .xls / .xlsx file only..</span>
+                                                                
+                                                              
+                                                                <span id="ctl00_ContentPlaceHolder1_requploadFile" style="color:Red;display:none;">Please select file to upload.</span>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                     </td>
+                                    </div>
+                                  </tr>
+                                  
+                                  <tr>
+                                                <td height="28" colspan="2" align="left" valign="top">
+                                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                        <tr>
+                                                            <td width="25%" height="28" align="left" valign="middle">
+                                                                &nbsp;
+                                                            </td>
+                                                            
+                                                            <td width="75%" height="28" align="left" valign="middle" style="padding-left: 5px;">
+                                                               <%= image_submit_tag "import.png" ,:id => 'imagebutton' ,:onclick=>"return ValidateExtension()" %> 
+                                                               <%#= image_submit_tag "import.png" %> 
+                                                            </td>
+                                                        </tr>
+                                                       
+                                                    </table>
+                                                </td>
+								  </tr>
+								</table>
+                                <%end%>
+                              </div>
+                               <div id ='importwork' style="display: none;">
+                                      <p align='center'>Import Time Work Sheet<p>
+                                       <%= form_tag import_time_sheets_path, multipart: true ,:name=>"myformtimeshhet", :id=>"myformtimesheet" do  %>
+                                 <table border="0" width="100%">
+								   <tr>
+                                           <td align="left" width=11%" height="20" valign="middle">
+                                             Select a file:
+                                            </td>
+											
+									<td align="left" valign="middle" style="padding-left: 10px;" width="36%" height="28">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                              <tr>
+                                                  <td valign="bottom">
+                                                       <%= file_field_tag :file1 %>
+                                                   </td>
+                                               </tr>
+                                               <tr>
+                                                   <td height="1">
+                                                   </td>
+                                               </tr>
+                                               <tr>
+                                                    <td valign="top">
+                                                     <span id="ctl00_ContentPlaceHolder1_lblUploadFile" style="color:Black;">(Please upload .xls / .xlsx file only)</span><br>
+                                                                                          
+                                                    </td>
+                                                </tr>
+           
+                                              </table>
+                                    </td>
+                                     <td valign="middle" style="padding-left: 0px;" width="48%" align="left">
+                                                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                        <tr>
+                                                            <td align="left">
+                                                                <span id="ctl00_ContentPlaceHolder1_lblResult"></span>
+                                                                <span id="lblErrortimesheet" style="color: red;"></span>   
+                                                                 <span id="reguploadFiletimesheet" style="color:Red;display:none;">Please upload .xls / .xlsx file only..</span>
+                                                                                                                            
+                                                                 <span id="ctl00_ContentPlaceHolder1_requploadFiletimesheet" style="color:Red;display:none;">Please select file to upload.</span>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                     </td>
+                                    
+                                  </tr>
+                                  
+                                  <tr>
+                                                <td height="28" colspan="2" align="left" valign="top">
+                                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                        <tr>
+                                                            <td width="25%" height="28" align="left" valign="middle">
+                                                                &nbsp;
+                                                            </td>
+                                                            <td width="75%" height="28" align="left" valign="middle" style="padding-left: 5px;">
+                                                               <%= image_submit_tag "import.png",:id => 'imagebuttontimesheet' ,:onclick=>"return ValidateExtensiontimesheet()"  %> 
+                                                            </td>
+                                                        </tr>
+                                                       
+                                                    </table>
+                                                </td>
+								  </tr>
+								</table>
+                                <%end%>
+                                </div>
+                           </td>
+                        </tr>
+           
+            </table>              
+   </div>
+   
+   <script type="text/javascript">
+    
+     
+     $(document).ready(function(){
+       $('input[type="radio"]').click(function(){
+        if($(this).attr("value")=="employee"){
+            $('#importwork').hide();
+            $('#importemployee').show();
+            // radioBtn.setError(null);
+            $("#ctl00_ContentPlaceHolder1_requploadFile").hide();
+            $("#reguploadFileemp").hide();
+            $("#file").val('');
+          
+        }
+        if($(this).attr("value")=="timesheet"){
+        	//debugger;
+            $('#importemployee').hide();
+            $('#importwork').show();
+           // radioBtn.setError(null);
+            //$(".error").removeClass("error");
+            $("#ctl00_ContentPlaceHolder1_requploadFiletimesheet").hide();
+            $("#reguploadFiletimesheet").hide();
+            $("#file1").val('');
+            
+        }
+        
+    });
+});
+  
+     
+     function ValidateExtension() 
+     {
+        var allowedFiles = [".xls", ".csv", ".xlsx"];
+        var fileUpload = document.getElementById("file");
+        var fileUpload1 = document.getElementById("file").value;
+       // var lblError = document.getElementById("lblError");
+        var regex = new RegExp("([a-zA-Z0-9\s_\\.\-:])+(" + allowedFiles.join('|') + ")$");
+        
+        if ( fileUpload1.length == '' )
+         {
+                   document.getElementById("ctl00_ContentPlaceHolder1_requploadFile").style.display="block" ;
+                   //Event.stop(event);
+                   // event.stopPropagation(); 
+                    return false;
+                  
+          }
+       
+        else if (!regex.test(fileUpload.value.toLowerCase())) 
+        {
+           // lblError.innerHTML = "Please upload files having extensions: <b>" + allowedFiles.join(', ') + "</b> only.";
+             document.getElementById("reguploadFileemp").style.display="block" ;
+           
+            document.getElementById("ctl00_ContentPlaceHolder1_requploadFile").style.display="none" ;
+            return false;
+        }
+      
+        
+        //    lblError.innerHTML = "";
+        //     return true;
+        
+    }
+    
+     function ValidateExtensiontimesheet() 
+     {
+       //alert('hi');
+        var allowedFiles = [".xls", ".csv", ".xlsx"];
+        var fileUploadtimesheet = document.getElementById("file1");
+        var fileUploadtimesheet1 = document.getElementById("file1").value;
+       // var lblErrortimesheet = document.getElementById("lblErrortimesheet");
+        var regex = new RegExp("([a-zA-Z0-9\s_\\.\-:])+(" + allowedFiles.join('|') + ")$");
+        
+        if ( fileUploadtimesheet1.length == '' )
+         {
+                   document.getElementById("ctl00_ContentPlaceHolder1_requploadFiletimesheet").style.display="block" ;
+                   //Event.stop(event);
+                   // event.stopPropagation(); 
+                    return false;
+                  
+          }
+       
+        else if (!regex.test(fileUploadtimesheet.value.toLowerCase())) 
+        {
+         //   lblErrortimesheet.innerHTML = "Please upload files having extensions: <b>" + allowedFiles.join(', ') + "</b> only.";
+           document.getElementById("reguploadFiletimesheet").style.display="block" ;
+            
+            document.getElementById("ctl00_ContentPlaceHolder1_requploadFiletimesheet").style.display="none" ;
+            return false;
+        }
+       
+        
+        //    lblError.innerHTML = "";
+         //    return true;
+         
+    }
+     
+   </script>
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   

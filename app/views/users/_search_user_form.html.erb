@@ -17,7 +17,8 @@
                                                   <%= f.label :status %> <%#= f.label :status_cont %>
                                                 </td>
                                                 <td align="left" valign="middle" style="padding-left: 10px;" width="20%">
-                                                     <%= f.select "status_eq","<option value ="">Select</option><option>Active</option><option>In-Active</option>".html_safe%>
+                                                     <%#= f.select "status_eq","<option value ="">Select</option><option>Active</option><option>In-Active</option>".html_safe%>
+                                      <%= f.select :status_eq, options_for_select([["Select"," "],["Active","Active"], ["In-Active","In-Active"]], @q.status_eq), :class => "input-medium search-field"%></p>
 
                                                 </td>
                                                 <td align="left" valign="middle" style="padding-left: 10px;" width="10%">

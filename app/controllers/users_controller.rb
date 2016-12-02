@@ -44,7 +44,7 @@ class UsersController < ApplicationController
      @user = User.find(params[:id])
      
       @user.update_attributes(user_params)
-     
+       redirect_to :back     
    end
  
    def delete
@@ -55,7 +55,7 @@ class UsersController < ApplicationController
      @users = User.all
      @user = User.find(params[:id])
       if @user.destroy
-         redirect_to :action=>'index'
+         redirect_to :back
       end
    end
    

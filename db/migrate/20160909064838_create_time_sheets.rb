@@ -1,8 +1,9 @@
 class CreateTimeSheets < ActiveRecord::Migration
   def change
     create_table :time_sheets do |t|
-                 t.integer :WORKED_ID
-                 t.integer :PAYROLL
+                 t.integer :WORKED_ID, limit: 8
+                 t.integer :ID, limit: 8
+                 t.integer :PAYROLL, limit: 8
                  t.timestamp :PDATE
                  t.integer :SHIFT
                  t.timestamp :ON_TIME

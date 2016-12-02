@@ -60,11 +60,18 @@ class SessionsController < ApplicationController
       
        userdb = User.db_authenticates(username)
     
-       if user && userdb
+       if user && userdb.is_admin ==  true
           session[:user_id] = userdb.id
            #raise  session[:user_id].inspect
+        # redirect_to :action => 'time_home', :controller=>"time_reports",:notice => "Logged in!"
+         redirect_to :action => 'index', :controller=>"users",:notice => "Logged in!"
+
+       elsif user && userdb.is_admin ==  false 
+         session[:user_id] = userdb.id
+          # raise session[:user_id].inspect
          redirect_to :action => 'time_home', :controller=>"time_reports",:notice => "Logged in!"
          
+
        elsif user && !userdb
     
           #   flash[:error] = "You are not authorized user For ARS"

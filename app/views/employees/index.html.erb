@@ -109,10 +109,24 @@
                                                        
                                                     </table>
                                                 </td>
-								  </tr>
-								</table>
+				  </tr>
+
+                                  <tr>
+                                                      <td height="28" align="left" valign="middle">
+                                                             <span id="ctl00_ContentPlaceHolder1_LblSampleExcel" class="text">Sample Template :</span>
+                                                      </td>
+                                                      <td height="28" align="left" valign="middle" style="padding-left: 0px;">
+                                                                
+                                                            <%#= link_to "Download sample template for importing Demographics", :action => :download_file %>
+                                                             <a href="files/demographics.xls">Download sample template for importing Demographics</a>
+                                                      </td>
+                                    </tr>
+								  
+				</table>
                                 <%end%>
                               </div>
+
+
                                <div id ='importwork' style="display: none;">
                                       <p align='center'>Import Time Work Sheet<p>
                                        <%= form_tag import_time_sheets_path, multipart: true ,:name=>"myformtimeshhet", :id=>"myformtimesheet" do  %>
@@ -172,8 +186,23 @@
                                                        
                                                     </table>
                                                 </td>
-								  </tr>
-								</table>
+				   </tr>
+
+                                   <tr>
+                                                 <td height="28" align="left" valign="middle">
+                                                        <span id="ctl00_ContentPlaceHolder1_LblSampleExcel" class="text">Sample Template :</span>
+                                                 </td>
+                                                 <td height="28" align="left" valign="middle" style="padding-left: 0px;">
+                                                                
+                                                       <%#= link_to "Download sample template for importing Demographics", :action => :download_file %>
+                                                        <a href="files/ST Timesheets 10093132.xls">Download sample template for importing Timesheets</a>
+                                                 </td>
+                                    </tr>
+								  
+
+
+
+				</table>
                                 <%end%>
                                 </div>
                            </td>

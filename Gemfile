@@ -70,6 +70,7 @@ gem 'roo-xls'
 
  gem 'bootstrap-datepicker-rails'
  
+gem 'iconv'
  
  gem 'net-ldap'
 

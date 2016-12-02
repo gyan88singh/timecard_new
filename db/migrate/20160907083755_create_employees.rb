@@ -1,24 +1,41 @@
 class CreateEmployees < ActiveRecord::Migration
   def change
     create_table :employees do |t|
-            t.string :first_name
-            t.string :middle_name
-            t.string :last_name
-            t.integer :badge
-            t.string :pin
-            t.string :gender
-            t.string :marital
-            t.string :social_ins
-            t.date :hire_date
-            t.date :birth_date
-            t.date :senor_date
-            t.date :term_date
-            t.string :emergency_name
-            t.string :floater
-            t.integer :home_address_id
-            t.integer :work_address_id
-            t.string :time_zone
-            t.integer :common_id
+            t.integer :PAYROLL, limit: 8
+
+            t.string :LAST_NAME
+
+            t.string :FIRST_NAME
+
+            t.string :MIDDLE_NAME
+
+            t.integer :BADGE, limit: 8
+
+            t.string :PIN
+            t.string :GENDER
+            t.string :MARITAL
+
+            t.string :SOCIAL_INS
+
+            t.date :HIRE_DATE
+
+            t.date :BIRTH_DATE
+
+            t.date :SENOR_DATE
+
+            t.date :TERM_DATE
+
+            t.string :EMERGENCY_NAME
+
+            t.string :FLOATER
+
+            t.integer :HOME_ADDRESS_ID
+
+            t.integer :WORK_ADDRESS_ID
+
+            t.string :TIME_ZONE
+
+            t.integer :COMMON_ID, limit: 8
             
       t.timestamps null: false
     end
