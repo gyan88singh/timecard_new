@@ -16,38 +16,39 @@
                                   <tr>
                                         <td align="center">&nbsp;</td>
                                    </tr>
-                                 <div>
+
                                   <tr align="left">
                                       <td class="popupbg" style="padding: 10px;">
-                                            <%= render "search_user_form" %>      
-                                      </td>
+                                            
+                                       <%= render "search_user_form" %>
+                                        
+                                    </td>
                                  
                                   </tr>
-                                  </div>
+                                
                                    <tr>
                                           <td height="25">&nbsp;</td>
                                     </tr>
    </table
        
-  <div>
+  <div class="container">
     <%= link_to "New User", new_user_path, remote: true, class: "btn btn-primary"  %>
      <%= link_to "Export",new_export_users_path,remote: true, class: "btn btn-primary"  %>
   </div>
-  <br>
-  <div class="new-user"></div>
+  </br>
+ 
   <div class="container" > 
       <table align = "right" border = "0">
                <tbody>
                  <tr>
                      <td>
-                      <b> <%= will_paginate @user ,:next_label => "&gt;&gt;" ,:previous_label => "&lt;&lt;" %> </b>
+                      <b> <%= will_paginate @users ,:next_label => "&gt;&gt;" ,:previous_label => "&lt;&lt;" %> </b>
                       </td>
                    <tr>
                 </tbody>
         </table>
   <table class="table table-bordered table-striped">
-    <thead>
-     
+   
       <tr>
       
         <th width="20%" height="5" align="left"  valign="middle" bgcolor="#0370b5" class="whitetext">Name</th>
@@ -59,7 +60,7 @@
         <td width="20%" height="28" align="left" valign="middle" bgcolor="#0370b5" class="whitetext">&nbsp;</td>
         <td width="20%" height="28" align="left" valign="middle" bgcolor="#0370b5" class="whitetext">&nbsp;</td>
       </tr>
-    </thead>
+
     <tbody class="user-index">
       <%= render "index" %>
     </tbody>
@@ -70,19 +71,14 @@
                <tbody>
                  <tr>
                      <td>
-                        <b> <%= will_paginate @user ,:next_label => "&gt;&gt;" ,:previous_label => "&lt;&lt;" %> </b>
+                        <b> <%= will_paginate @users ,:next_label => "&gt;&gt;" ,:previous_label => "&lt;&lt;" %> </b>
                       </td>
-                   <tr>
+                  <tr>
                 </tbody>
-        </table>
-        
    </table>
-
-
-</div>
-
- 
+     
 <div id="user-modal" class="modal fade"></div>
+</div>
 </div>
 
 </html>

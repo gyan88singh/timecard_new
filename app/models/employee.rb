@@ -1,18 +1,27 @@
 class Employee < ActiveRecord::Base
   
-#  require 'CSV' 
+  require 'CSV' 
   require 'roo'           
   require 'rubygems'
   
   
   def self.import(file)
      spreadsheet = Roo::Spreadsheet.open(file.path)
+
      header = spreadsheet.row(1)
-     (2..spreadsheet.last_row).each do |i|
+     if header == ["PAYROLL", "LAST_NAME", "FIRST_NAME", "MIDDLE_NAME", "BADGE", "PIN", "GENDER", "MARITAL", "SOCIAL_INS", "HIRE_DATE", "BIRTH_DATE", 
+       "SENOR_DATE", "TERM_DATE", "EMERGENCY_NAME", "FLOATER", "HOME_ADDRESS_ID", "WORK_ADDRESS_ID", "TIME_ZONE", "COMMON_ID"]
+       (2..spreadsheet.last_row).each do |i|
        row = Hash[[header, spreadsheet.row(i)].transpose]
-      employee = find_by(id: row["id"]) || new
+  
+      employee = find_by(PAYROLL: row["PAYROLL"]) || new
        employee.attributes = row.to_hash
        employee.save!
+      end
+      return true
+     else
+        return false
+  
      end
    end  
    

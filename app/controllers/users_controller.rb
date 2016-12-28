@@ -2,20 +2,16 @@ class UsersController < ApplicationController
   before_filter :authorize
   
   def index
-    #raise params.inspect
-   # if params[:q] 
-          @q = User.ransack(params[:q])
-          #  raise @q.result.where("domain_name !=?",'').inspect
-          @users = @q.result.where("domain_name !=?",'').paginate(page: params[:page], per_page: 5).order(id: :asc)
- # else     
-        #  @userss = User.order(:id)
-        #  @users1 = User.all.paginate(page: params[:page], per_page: 4)
- #  end
-     
-      respond_to do |format|
-          format.html
-          format.csv { send_data @users.to_csv }
-          format.xls { send_data @users.to_csv(col_sep: "\t") }
+    #raise params[:page].inspect
+         @q = User.ransack(params[:q])
+         @users = @q.result.where("domain_name !=?",'').paginate(page: params[:page], per_page: 5).order(id: :desc)
+           
+    @userexport = User.order(:id)
+       respond_to do |format|
+       
+          format.html 
+          format.csv { send_data @userexport.to_csv }
+          format.xls 
        end
       
   
@@ -30,9 +26,11 @@ class UsersController < ApplicationController
    end
  
    def create
-     @users = User.where("domain_name !=?",'').paginate(page: params[:page], per_page: 4).order(id: :asc)
-        @user = User.create(user_params)
-        
+     @users = User.where("domain_name !=?",'').paginate(page: params[:page], per_page: 5).order(id: :desc)
+     @user = User.create(user_params)
+     #if @user
+      #  redirect_to :action => 'index'
+     #end
    end
  
    def edit
@@ -40,11 +38,11 @@ class UsersController < ApplicationController
    end
  
    def update
-     @users = User.where("domain_name !=?",'').paginate(page: params[:page], per_page: 4).order(id: :asc)
+    
+     @users = User.where("domain_name !=?",'').paginate(page: params[:page], per_page: 5).order(id: :desc)
      @user = User.find(params[:id])
-     
-      @user.update_attributes(user_params)
-       redirect_to :back     
+     @user.update_attributes(user_params)
+     redirect_to :back
    end
  
    def delete
@@ -52,11 +50,12 @@ class UsersController < ApplicationController
    end
  
    def destroy
-     @users = User.all
+   #  @users = User.where("domain_name !=?",'').paginate(page: params[:page], per_page: 5).order(id: :desc)
      @user = User.find(params[:id])
-      if @user.destroy
-         redirect_to :back
-      end
+     if @user.destroy 
+       redirect_to :back
+     end
+      
    end
    
   def new_export
@@ -71,20 +70,33 @@ class UsersController < ApplicationController
   end
   
   def my_account
-     
-      # session[:patient_id] = nil
       @user = User.find(session[:user_id])
       @user.password = ''
      end
  
    def change_password
+     @user = User.find(session[:user_id])
    end
+   
+   
+  def save_user_info
+    raise params.inspect
+      @user = User.find(session[:user_id])
+      if params[:old][:password] != @user.password
+        @user.errors.add('',"Please Enter Old Password Correctly")
+      else  
+        status = @user.update_attributes(params[:user])
+        flash[:notice] = 'User Details Updated Successfully' if status 
+      end
+      render :action => 'my_account'
+    end
    
    def edit_department
      @userdep = User.find(params[:user_id])
    end
    
    def update_department
+     fffff
     # params[:user][:department_ids] ||=[]
 #raise params.inspect
     # @users = User.all
@@ -96,9 +108,9 @@ class UsersController < ApplicationController
   
  private
    def user_params
-     #raise params.inspect
+    # raise params.inspect
      params.require(:user).permit(:first_name, :last_name,:domain_name,:email,:password,:password_confirmation,:is_admin,:status,:created_by,:updated_by,:department_ids,{department_ids: []})
- #    params.require(:user).permit!
+   # params.require(:user).permit!
    end
   
   def user_params1

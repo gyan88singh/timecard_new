@@ -1,0 +1,304 @@
+<% 
+	$i = 0 ;
+	
+	iInOutCount = @times[0].to_i ;
+    arrTimeCard = @times[1]; 
+	
+	#puts arrTimeCard.map{|e| e["attendancedate"]}.inspect;
+ 	arrAttandanceDate = arrTimeCard.map{|e| e["attendancedate"]};
+ 	#iAttendanceCount = strAttandanceDate.count ;
+ 	
+ 	#arrFirstInOut = arrTimeCard.map{|e| e["0"]};
+ 	 headers = arrTimeCard.flat_map(&:keys).uniq
+ 	 
+ 	 rows = arrTimeCard.map(&:values).flatten
+ 	 
+%>
+
+
+
+
+<?xml version="1.0"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns:x="urn:schemas-microsoft-com:office:excel"
+  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:html="http://www.w3.org/TR/REC-html40">
+  <Worksheet ss:Name="Sheet1">
+    <Table>
+          <Row> <Cell><Data ss:Type="String"> Time Card Report From Date : <%= params[:from_date] %> to To Date : <%= params[:to_date] %> </Data></Cell> </Row>
+            <Row> </Row>
+    	 <% if params[:emp_id] != "" %> 
+
+	  	<Row>
+ 			  <% empid = @times[2].to_i %>
+ 				<% @emp = Employee.where(PAYROLL: empid).first %>
+ 
+ 				<% @deptimesheet = TimeSheet.where(PAYROLL: empid).first %>
+              <Cell><Data ss:Type="String">
+                    <%= @emp.PAYROLL %> , <%= @emp.LAST_NAME.to_s + ' ' + @emp.FIRST_NAME.to_s %> 
+			  </Data></Cell>
+              
+              <Cell><Data ss:Type="String">
+                   Department:&nbsp;&nbsp;&nbsp; <%= @deptimesheet.DEPT_GROUP %> <%= @deptimesheet.CENTRE %> 
+              </Data></Cell>                
+	  </Row>
+	  <%end%>
+	  
+	  <Row> </Row>
+	  
+      <Row>
+         	<Cell> <Data ss:Type="String" , 'ss:Color'="#0370b5">Day / Date</Data></Cell>
+        <% (0..(iInOutCount-1)).each do |i| %>
+		     <Cell><Data ss:Type="String">In</Data></Cell>
+			 <Cell><Data ss:Type="String">Out</Data></Cell>
+	    <%end%>
+			 <Cell><Data ss:Type="String">Total</Data></Cell>
+		     <Cell><Data ss:Type="Number"></Data></Cell>
+
+      
+       
+      </Row>
+   
+      <% cumulativehrs = 0 %>
+		   <% (0..(arrAttandanceDate.count)-1).each do |k| %>
+		   		 <Row>
+		   		     <% s =  arrTimeCard[k]["attendancedate"] %>
+		   		     <% d = Date.parse(s) %>
+		   		     <% d1 = d.strftime('%a') %>
+		   		 
+                   	<Cell><Data ss:Type="String"> <%= d1 %>  <%= (arrTimeCard[k]["attendancedate"]).split('|')[0] %></Data></Cell>
+                   
+                   <% strHoursFinal =[] %> <% sum = 0 %> 
+                   
+                   	<% (0..(iInOutCount-1)).each do |j| %>
+	    				 <Cell><Data ss:Type="String"> <%= arrTimeCard[k][j.to_s].blank? ? " " : showtime(arrTimeCard[k][j.to_s].split('-')[0]) %> </Data></Cell>
+	    			     <Cell><Data ss:Type="String"> <%= arrTimeCard[k][j.to_s].blank? ? " " : showtime(arrTimeCard[k][j.to_s].split('-')[1]) %> </Data></Cell>
+					
+						 <% arrTimeCard[k][j.to_s].blank? ? " " : strHours0 = (arrTimeCard[k][j.to_s].split('-')[2]) %>
+					 
+						 <% strHoursFinal << strHours0.to_i  %>
+					<% end %>
+					
+					<% strHours = strHoursFinal.inject(0){|sum,x| sum + x } %>
+					<% floatHoursFinal = number_with_precision(Float(strHours)/60, precision: 2) %>	
+					
+					<Cell><Data ss:Type="Number"> <%= floatHoursFinal  %>  </Data></Cell>
+				  	<%
+				  		if (k == 0)
+				  			cumulativehrs = floatHoursFinal.to_f
+				  		elsif (k > 0)
+				  			cumulativehrs = cumulativehrs.to_f + floatHoursFinal.to_f
+				  		end
+				  	%>
+				  	
+					 <Cell><Data ss:Type="Number">
+				                 <%= number_with_precision(cumulativehrs, precision: 2) %> </Data></Cell>
+				</Row>
+
+            <%end%>
+   <Row> </Row>
+   
+   	 <% if params[:emp_id] != "" %>
+      <% @times[3].each do |timesecond| %>
+  			
+  		 <Row>
+    		<Cell><Data ss:Type="String"> Transac:&nbsp;&nbsp;&nbsp;<%= timesecond.PDATE.strftime("%a")%> <%= timesecond.PDATE.strftime("%Y-%m-%d") %> </Data></Cell>
+    
+    		<Cell><Data ss:Type="String"> <% if timesecond.CODE == 'SIC' %>
+    	                                                                                                  Sick 
+    	                                                                                                <% elsif timesecond.CODE == 'VAC' %>
+    	                                                                                                     Vacation 
+    	                                                                                                <% elsif timesecond.CODE == 'PH' %>
+    	                                                                                                     Holiday Pay
+ 
+    	                                                                                                 <%end%>
+    	                                                                                                 </Data></Cell>
+    	
+    		<Cell><Data ss:Type="String"> <%= timesecond.DEPT_GROUP  + " " + " " +  timesecond.CENTRE %> </Data></Cell>
+
+     		<Cell><Data ss:Type="String"> Amount: </Data></Cell>
+     	
+     		<Cell><Data ss:Type="String">
+     																			<% if timesecond.CODE == 'VAC' %>
+    	                                                                             8.00 
+    	                                                                             
+    	                                                                          <% elsif timesecond.CODE == 'SIC' %>
+    	                                                                              <% sicktime = Float(timesecond.HOURS)/60 %>
+    	                                                                              
+    	                                                                              <%= number_with_precision(sicktime,precision: 2) %>
+    	                                                                                                
+    	                                                                        <%end%> </Data></Cell>
+  			
+  		</Row>
+
+		<% end %>
+	   <%end%>
+	   
+     <Row> </Row>
+     
+     <% if params[:emp_id] != "" %> 
+    
+     <Row>
+      
+         <Cell><Data ss:Type="String"> Department</Data></Cell>
+        
+         <Cell><Data ss:Type="String"> Category</Data></Cell>
+         <Cell><Data ss:Type="String">Type</Data></Cell>
+        
+         <Cell><Data ss:Type="String">Amount</Data></Cell>
+       
+         <Cell><Data ss:Type="String">Dollar</Data></Cell>
+       
+                
+      </Row>
+      
+  	     <% @Arrdepartment.each do |arrdepart| %>
+  	    
+  			
+  	          
+  	             <% departfinal = arrdepart[0] + " " + arrdepart[1] %>
+  	              
+  	             <% regulardataregular =  TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=? and  ("DEPT_GROUP")=? and ("CENTRE") =? and ("CODE")=? ',params[:emp_id],params[:from_date],params[:to_date],arrdepart[0],arrdepart[1],'(W)').pluck("sum (\"HOURS\") as total_hours") %>
+   
+         		 <% regulardatatimeregular = Float(regulardataregular[0])/60 if !regulardataregular[0].nil?  %>
+         	 
+          		 <Row>
+  	              
+  	         	  <Cell><Data ss:Type="String"> <%= departfinal %> </Data></Cell>
+  	         
+  	          	  <Cell><Data ss:Type="String"> Regular </Data></Cell>
+  	           	  <Cell><Data ss:Type="String"> Time </Data></Cell>
+  	              <Cell><Data ss:Type="String"> <%= regulardatatimeregular.blank? ? 0.00 :  number_with_precision(regulardatatimeregular,precision: 2) %> </Data></Cell>
+  	              <Cell><Data ss:Type="String"> $0.00 </Data></Cell>
+  	             
+  	     		 </Row> 
+  	        
+  	              <% regulardatasick =  TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=?  and ("DEPT_GROUP")=? and ("CENTRE") =? and ("CODE")=? ',params[:emp_id],params[:from_date],params[:to_date],arrdepart[0],arrdepart[1],'SIC').pluck("sum (\"HOURS\") as total_hours") %>
+   
+         		  <% regulardatatimesick = Float(regulardatasick[0])/60 if !regulardatasick[0].nil?  %>
+         	 <% if regulardatasick[0] %> 
+             	<Row>
+  	              
+  	         	 <Cell><Data ss:Type="String">  </Data></Cell>
+  	         
+  	          	 <Cell><Data ss:Type="String"> Sick </Data></Cell>
+  	           	<Cell><Data ss:Type="String"> Time </Data></Cell>
+  	             <Cell><Data ss:Type="String"> <%= regulardatatimesick.blank? ? 0.00 :  number_with_precision(regulardatatimesick,precision: 2) %> </Data></Cell>
+  	             <Cell><Data ss:Type="String"> $0.00 </Data></Cell>
+  	           
+  	        	</Row>
+  	         <% end %>
+  	        
+  	        	 <% regulardatavac =  TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=?  and ("DEPT_GROUP")=? and ("CENTRE") =? and ("CODE")=? ',params[:emp_id],params[:from_date],params[:to_date],arrdepart[0],arrdepart[1],'VAC').pluck("sum (\"HOURS\") as total_hours") %>
+   
+         		 <% regulardatatimevac = Float(regulardatavac[0])/60 if !regulardatavac[0].nil?  %>
+         	  <% if regulardatavac[0] %>	 
+             	 <Row>
+  	              
+  	         	 <Cell><Data ss:Type="String">   </Data></Cell>
+  	         
+  	          	 <Cell><Data ss:Type="String">  vacation </Data></Cell>
+  	           	 <Cell><Data ss:Type="String">  Time </Data></Cell>
+  	            <Cell><Data ss:Type="String">  <%= regulardatatimevac.blank? ? 0.00 :  number_with_precision(regulardatatimevac,precision: 2) %>  </Data></Cell>
+  	             <Cell><Data ss:Type="String">  $0.00 </Data></Cell>
+  	           
+  	          	</Row>
+  	          <% end %>
+  	    
+  	           
+  	        
+  	        	 <% regulardataholiday =  TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=?  and ("DEPT_GROUP")=? and ("CENTRE") =? and ("CODE")=? ',params[:emp_id],params[:from_date],params[:to_date],arrdepart[0],arrdepart[1],'PH').pluck("sum (\"HOURS\") as total_hours") %>
+  
+         		 <% regulardatatimeholiday = Float(regulardataholiday[0])/60 if !regulardataholiday[0].nil?  %>
+         	 <% if regulardataholiday[0] %>	
+            	 <Row>
+  	              
+  	         	 <Cell><Data ss:Type="String">   </Data></Cell>
+  	         
+  	          	 <Cell><Data ss:Type="String">  Holiday </Data></Cell>
+  	           	 <Cell><Data ss:Type="String">  Time </Data></Cell>
+  	             <Cell><Data ss:Type="String">  <%= regulardatatimeholiday.blank? ? 0.00 :  number_with_precision(regulardatatimeholiday,precision: 2) %> </Data></Cell>
+  	    		 <Cell><Data ss:Type="String">  $0.00 </Data></Cell>
+  	           
+  	        	</Row>
+      	    <% end %>
+       <% end %>
+      <%end%>
+       
+      <Row> </Row>
+      
+      <% if params[:emp_id] != "" %>
+        
+        <% employeetotalregular =  TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=?  and ("CODE")=? ',params[:emp_id],params[:from_date],params[:to_date],'(W)').pluck("sum (\"HOURS\") as total_hours") %>
+   
+         		 <% employeetotaltimeregular = Float(employeetotalregular[0])/60 if !employeetotalregular[0].nil?  %>
+			 
+  	         <Row>    
+  	         	 <Cell><Data ss:Type="String"> Employee Total </Data></Cell>
+  	         
+  	          	 <Cell><Data ss:Type="String"> Regular </Data></Cell>
+  	           	 <Cell><Data ss:Type="String"> Time </Data></Cell>
+  	             <Cell><Data ss:Type="String"> <%= employeetotaltimeregular.blank? ? 0.00 :  number_with_precision(employeetotaltimeregular,precision: 2) %>  </Data></Cell>
+  	             <Cell><Data ss:Type="String"> $0.00 </Data></Cell>
+  	      	</Row>
+  	      	  
+  	      	 
+  	       		 <% employeetotalsick =  TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=?  and ("CODE")=? ',params[:emp_id],params[:from_date],params[:to_date],'SIC').pluck("sum (\"HOURS\") as total_hours") %>
+   
+         		 <% employeetotaltimesick = Float(employeetotalsick[0])/60 if !employeetotalsick[0].nil?  %>
+			       	  
+			  <% if employeetotaltimesick %>	 
+
+  	          <Row>    
+  	         	 <Cell><Data ss:Type="String"> </Data></Cell>
+  	         
+  	          	 <Cell><Data ss:Type="String"> Sick </Data></Cell>
+  	           	 <Cell><Data ss:Type="String"> Time </Data></Cell>
+  	             <Cell><Data ss:Type="String"> <%= employeetotaltimesick.blank? ? 0.00 :  number_with_precision(employeetotaltimesick,precision: 2) %>  </Data></Cell>
+  	             <Cell><Data ss:Type="String"> $0.00 </Data></Cell>
+  	      	 </Row> 
+  	      	 <% end %>
+  	      	
+  	       		 <% employeetotalvac =  TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=?  and ("CODE")=? ',params[:emp_id],params[:from_date],params[:to_date],'VAC').pluck("sum (\"HOURS\") as total_hours") %>
+   
+         		 <% employeetotaltimevac = Float(employeetotalvac[0])/60 if !employeetotalvac[0].nil?  %>
+         	   <% if employeetotaltimevac %>	 
+
+  	          <Row>    
+  	         	 <Cell><Data ss:Type="String">  </Data></Cell>
+  	         
+  	          	 <Cell><Data ss:Type="String"> Vacation </Data></Cell>
+  	           	 <Cell><Data ss:Type="String"> Time </Data></Cell>
+  	             <Cell><Data ss:Type="String"> <%= employeetotaltimevac.blank? ? 0.00 :  number_with_precision(employeetotaltimevac,precision: 2) %> </Data></Cell>
+  	             <Cell><Data ss:Type="String"> $0.00 </Data></Cell>
+  	      	  </Row> 
+  	      	  <% end %>
+
+  	      	 
+  	       		 <% employeetotalholiday =  TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=?  and ("CODE")=? ',params[:emp_id],params[:from_date],params[:to_date],'PH').pluck("sum (\"HOURS\") as total_hours") %>
+   
+         		 <% employeetotaltimeholiday = Float(employeetotalholiday[0])/60 if !employeetotalholiday[0].nil?  %>
+ 			<% if employeetotaltimeholiday %>
+ 			
+ 			 <Row> 
+  	              
+  	         	 <Cell><Data ss:Type="String">  </Data></Cell>
+  	         
+  	          	 <Cell><Data ss:Type="String"> Holiday </Data></Cell>
+  	           	 <Cell><Data ss:Type="String"> Time </Data></Cell>
+  	             <Cell><Data ss:Type="String"> <%= employeetotaltimeholiday.blank? ? 0.00 :  number_with_precision(employeetotaltimeholiday,precision: 2) %>  </Data></Cell>
+  	             <Cell><Data ss:Type="String"> $0.00 </Data></Cell>
+  	      	  </Row> 
+  	      	<% end %>
+       <%end%>
+    
+    </table>
+    
+  </Worksheet>
+</Workbook>
+  
+  
+  
+  
+  
