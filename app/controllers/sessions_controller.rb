@@ -58,7 +58,11 @@ class SessionsController < ApplicationController
      user = User.domain_authenticates(user,params[:User][:password])
        
        userdb = User.db_authenticates(username)
-    
+   # raise userdb.inspect
+      if userdb.nil?
+        render :action => "index", :layout => false
+      else
+      
        if user  && userdb.is_admin ==  true
          session[:user_id] = userdb.id
           # raise session[:user_id].inspect
@@ -80,6 +84,7 @@ class SessionsController < ApplicationController
          # redirect_to :action => 'login',:controller => 'logins' 
          
        end
+     end
    end   
  end
  

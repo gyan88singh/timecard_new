@@ -4,14 +4,11 @@
 	iInOutCount = @times[0].to_i ;
     arrTimeCard = @times[1]; 
 	
-	#puts arrTimeCard.map{|e| e["attendancedate"]}.inspect;
  	arrAttandanceDate = arrTimeCard.map{|e| e["attendancedate"]};
- 	#iAttendanceCount = strAttandanceDate.count ;
- 	
- 	#arrFirstInOut = arrTimeCard.map{|e| e["0"]};
- 	 headers = arrTimeCard.flat_map(&:keys).uniq
+ 
+ 	headers = arrTimeCard.flat_map(&:keys).uniq
  	 
- 	 rows = arrTimeCard.map(&:values).flatten
+ 	rows = arrTimeCard.map(&:values).flatten
  	 
 %>
 

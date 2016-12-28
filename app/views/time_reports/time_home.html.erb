@@ -40,7 +40,7 @@
                                      </td>  -->
                                      
                                     <td width="6%">
-                                               <label>Payroll</label>
+                                            <span class="mandatory_color" style="color:red">*</span>   <label>Payroll</label>
                                      </td>
                                      <td width="10%" style="color: #6D6D6D !important;">
                                             <input type="text" id="empid" name="emp_id">
@@ -103,7 +103,7 @@
     
 </div>
 
-<script type="text/javascript">
+<script>
 
 //  $(document).ready(function(){
     
@@ -127,8 +127,8 @@
   var end = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
   $('#datepicker1').datepicker({
-       // format: "mm/dd/yyyy",
-        format: "yyyy/mm/dd",
+        format: "mm/dd/yyyy",
+       // format: "yyyy/mm/dd",
         todayHighlight: true,
        // startDate: today,
        // endDate: end,
@@ -136,8 +136,8 @@
   });
   
   $('#datepicker2').datepicker({
-      // format: "mm/dd/yyyy",
-       format: "yyyy/mm/dd",
+       format: "mm/dd/yyyy",
+    // format: "yyyy/mm/dd",
        todayHighlight: true,
      //  startDate: today,
      //  endDate: end,
@@ -152,16 +152,32 @@
 
 
  	$(document).ready(function() {
-   		 $('#navButton').click(function(){
+   		 $('#navButton').click(function(event){
      	 //alert(1)
-     	 $("#image").show();
+ 	 if ( $("#empid").val() == "" )
+ 	 {
+ 	 // alert("Payroll is mandatory");
+ 	  // event.stop();
+ 	  }
+ 	 else
+ 	 {
+     	 var $loader = $('#image');
+     	// $("#image").show();
      	 	$.ajax({
          	url : "/time_reports/search_time_report",
         	 success: function(data) {
         	 $("#dynamicLoadingPanel").html(data);
         	  
-         	}
+         	},
+            beforeSend : function(){
+               $loader.show();
+            },
+            complete : function(){
+               $loader.hide();
+            }
       	});
+      	
+      }
       	  
      	});
 	});

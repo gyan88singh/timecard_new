@@ -61,21 +61,23 @@ class TimeSheet < ActiveRecord::Base
   def self.search_datewise_time_report(payroll,from_date,to_date)
   
          code = '(W)'
+      
+    #pay_types = PayType.where(pay_code =? , ('(W)' ,'(X)'))
          
          if payroll == ""
           # a = "SELECT date(\"CLK_ON\"),date(\"CLK_ON\"),concat_ws(''''-'''', \"time\"(\"CLK_ON\")::text, \"time\"(\"CLK_OFF\")::text,(\"HOURS\")::text) FROM time_sheets 
           #   WHERE ( date(\"CLK_ON\") >=''''" + from_date + "'''' and date(\"CLK_OFF\") <=''''" + to_date + "'''' and (\"CODE\") = ''''" + code + "'''') ORDER BY 2,3"
-           a = "SELECT concat_ws(''''|'''', date(\"CLK_ON\")::text, \"PAYROLL\"::text, \"DEPT_GROUP\"::text, \"CENTRE\"::text), \"PAYROLL\",concat_ws(''''-'''', \"time\"(\"CLK_ON\")::text,\"time\"(\"CLK_OFF\")::text,(\"HOURS\")::text)
-                FROM   time_sheets WHERE (date(\"CLK_ON\") >=''''" + from_date + "'''' and date(\"CLK_OFF\") <=''''" + to_date + "''''and (\"CODE\") = ''''(W)'''') 
-               group by \"PAYROLL\", \"CLK_ON\",\"CLK_OFF\",\"HOURS\", \"DEPT_GROUP\", \"CENTRE\" ORDER  BY \"PAYROLL\", \"CLK_ON\""
+           a = "SELECT concat_ws(''''|'''', date(\"CLK_ON\")::text, \"PAYROLL\"::text, \"DEPT_GROUP\"::text, \"CENTRE\"::text), \"PAYROLL\",concat_ws(''''-'''', \"time\"(\"CLK_ON\")::text,\"time\"(\"CLK_OFF\")::text,(\"HOURS\")::text,(\"DOCKET\")::text)
+                FROM   time_sheets WHERE (date(\"CLK_ON\") >=''''" + from_date + "'''' and date(\"CLK_OFF\") <=''''" + to_date + "''''and (\"CODE\") in (''''(W)'''' , ''''(X)'''')) 
+               group by \"PAYROLL\", \"CLK_ON\",\"CLK_OFF\",\"HOURS\", \"DEPT_GROUP\", \"CENTRE\",\"DOCKET\" ORDER  BY \"PAYROLL\", \"CLK_ON\""
          
          else
          #  a = "SELECT date(\"CLK_ON\"),date(\"CLK_ON\"),concat_ws(''''-'''', \"time\"(\"CLK_ON\")::text, \"time\"(\"CLK_OFF\")::text,(\"HOURS\")::text) FROM time_sheets 
           #              WHERE ((\"PAYROLL\") = ''''" + payroll.to_s + "'''' and date(\"CLK_ON\") >=''''" + from_date + "'''' and date(\"CLK_OFF\") <=''''" + to_date + "'''' and (\"CODE\") = ''''" + code + "'''') ORDER BY 2,3"
          
-         a = "SELECT concat_ws(''''|'''', date(\"CLK_ON\")::text, \"PAYROLL\"::text), \"PAYROLL\",concat_ws(''''-'''', \"time\"(\"CLK_ON\")::text,\"time\"(\"CLK_OFF\")::text,(\"HOURS\")::text)
-            FROM   time_sheets WHERE ((\"PAYROLL\") = ''''" + payroll.to_s + "'''' and date(\"CLK_ON\") >=''''" + from_date + "'''' and date(\"CLK_OFF\") <=''''" + to_date + "''''and (\"CODE\") = ''''(W)'''') 
-            group by \"PAYROLL\", \"CLK_ON\",\"CLK_OFF\",\"HOURS\" ORDER  BY \"PAYROLL\", \"CLK_ON\""
+         a = "SELECT concat_ws(''''|'''', date(\"CLK_ON\")::text, \"PAYROLL\"::text), \"PAYROLL\",concat_ws(''''-'''', \"time\"(\"CLK_ON\")::text,\"time\"(\"CLK_OFF\")::text,(\"HOURS\")::text,(\"DOCKET\")::text)
+            FROM   time_sheets WHERE ((\"PAYROLL\") in (''''" + payroll.to_s + "'''') and date(\"CLK_ON\") >=''''" + from_date + "'''' and date(\"CLK_OFF\") <=''''" + to_date + "''''and (\"CODE\") in (''''(W)'''' , ''''(X)'''')) 
+            group by \"PAYROLL\", \"CLK_ON\",\"CLK_OFF\",\"HOURS\",\"DOCKET\" ORDER  BY \"PAYROLL\", \"CLK_ON\""
          
          end
                 
@@ -83,12 +85,13 @@ class TimeSheet < ActiveRecord::Base
            
           if payroll == ""
             b = ActiveRecord::Base.connection.select_all("SELECT  employeeattendance('" + from_date + "','" + to_date + "');").map{|e| e["employeeattendance"]}
-
+           #  b = []
           else
           
             b = ActiveRecord::Base.connection.select_all("SELECT  employeeattendance('" + payroll + "','" + from_date + "','" + to_date + "');").map{|e| e["employeeattendance"]}
           end 
                puts b[0]
+          if b[0] != nil
             
               c = "text"
               d = "attendancedate text" 
@@ -102,8 +105,9 @@ class TimeSheet < ActiveRecord::Base
                 @arrfinaltime =  time1.to_hash
               end
           
-              @timessecond = TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=? and (("CODE") = ? or ("CODE") = ? or ("CODE") = ?)',payroll,from_date,to_date,'SIC','VAC','PH')
-
+              #@timessecond = TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=? and (("CODE") = ? or ("CODE") = ? or ("CODE") = ?)',payroll,from_date,to_date,'SIC','VAC','PH')
+              @timessecond = TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=? and (("CODE") != ? and ("CODE") != ? )',payroll,from_date,to_date,'(W)','(X)')
+              #raise @timessecond.inspect
          
      #### Megha Code ###############       
               @payrollids = []
@@ -172,6 +176,10 @@ class TimeSheet < ActiveRecord::Base
    #### Code End by Megha########## 
                   
            return b[0],@arrfinaltime,payroll,@timessecond;
+           
+      else
+           return nil
+      end
     
   end
   

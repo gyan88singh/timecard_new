@@ -1,9 +1,11 @@
+  <% if @times !=nil %>
+ 
  <div align= "right">
         
-        <b>  <%= link_to "Export To Excel", timecard_report_time_reports_path(format: "xls",:emp_id => params[:emp_id],:from_date => params[:from_date],:to_date => params[:to_date]) %> </b>
+        <b>  <%= link_to image_tag("export.png"),timecard_report_time_reports_path(format: "xls",:emp_id => params[:emp_id],:from_date => params[:from_date],:to_date => params[:to_date]) %> </b>
         
   </div>
- <div > <b>  Time Card Report From Date : <%= params[:from_date] %> to To Date : <%= params[:to_date] %> </b> </div>
+ <div align = "center" > <b>  Time Card Report From Date : <%= params[:from_date] %> to To Date : <%= params[:to_date] %> </b> </div>
  
   <% if params[:emp_id] != "" %> 
 
@@ -14,20 +16,43 @@
  				<% @emp = Employee.where(PAYROLL: empid).first %>
  
  				<% @deptimesheet = TimeSheet.where(PAYROLL: empid).first %>
-              <td width="7%" bgcolor="#008080" class="whitetext" height="20">
+ 				<% depcentre = Department.where('department_code = ?' ,@deptimesheet.CENTRE).pluck(:department_desc) %>
+ 				
+ 				<% 
+ 				  if depcentre.blank?
+ 				  
+ 				     ss = @deptimesheet.CENTRE
+ 				     
+ 				  else
+ 				   ss = depcentre[0]
+ 				  end
+ 				
+ 				%>
+ 				
+ 				
+              <td width="40px" bgcolor="#008080" class="whitetext" height="20">
                    <label>Employee Number & Name:&nbsp;&nbsp;&nbsp; <%= @emp.PAYROLL %> , <%= @emp.LAST_NAME.to_s + ' ' + @emp.FIRST_NAME.to_s %> </label>
               </td>
               
-              <td width="7%" bgcolor="#008080" class="whitetext" height="20">
-                   <label>Department:&nbsp;&nbsp;&nbsp; <%= @deptimesheet.DEPT_GROUP %> <%= @deptimesheet.CENTRE %> </label>
+              <td width="50px" bgcolor="#008080" class="whitetext" height="20">
+                   <label>Job title:&nbsp;&nbsp;&nbsp; <%= @deptimesheet.POS %> </label>
               </td>
               
-                          
+     <tr>        
+             
+              <td width="100px" bgcolor="#008080" class="whitetext" height="20">
+                   <label>Department:&nbsp;&nbsp;&nbsp; <%= @deptimesheet.DEPT_GROUP + " " + ss %> </label>
+              </td>
+              
+              <td width="100px" bgcolor="#008080" class="whitetext" height="20">
+              </td>
+      </tr>
+                         
 	</tr>
 </table>
 
 <%end%>
-<div style ="overflow-x:scroll;">
+<div style ="overflow-x:scroll;" class ="scrollable-menu">
 
 
 <% 
@@ -48,20 +73,20 @@
 %>
 
 
-	<table cellpadding=5 cellspacing=2 border=1 style="width:200%">
+	<table cellpadding=5 cellspacing=2 border=1 style="width:150%">
 	 
 		<tr>
 	        
-       			<th width="10%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext">Day / Date</th>
+       			<th width="100px" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> Day / Date </th>
     
 			<% (0..(iInOutCount-1)).each do |i| %>
-				<th width="5%" height="28" align="left"  valign="middle" bgcolor="#0370b5" class="whitetext">IN</th>
-				<th width="5%" height="28" align="left"  valign="middle" bgcolor="#0370b5" class="whitetext">OUT</th>
+				<th width="100px" height="28" align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> IN </th>
+				<th width="100px" height="28" align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> OUT </th>
 				<!--th width="10%" height="28" align="left"  valign="middle" bgcolor="#0370b5" class="whitetext">TIME</th-->
 			<% end %>
 			
-				<th width="5%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext">Total</th>
-				<th width="5%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"></th>
+				<th width="100px" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> Total </th>
+				<th width="100px" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"></th>
 			
 			
 		</tr>
@@ -70,17 +95,30 @@
 		    <% cumulativehrs = 0 %>
 		   <% (0..(arrAttandanceDate.count)-1).each do |k| %>
 		   		 <tr>
-		   		     <% s =  arrTimeCard[k]["attendancedate"] %>
+		   		     <% s =  arrTimeCard[k]["attendancedate"].split('|')[0] %>
 		   		     <% d = Date.parse(s) %>
+		   		     
 		   		     <% d1 = d.strftime('%a') %>
 		   		 
-                   	<td width="10%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> <%= d1 %>  <%= (arrTimeCard[k]["attendancedate"]).split('|')[0] %></td>
+                   	<td width="8%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> <%= d1 %>  <%= d.strftime("%m-%d-%Y") %></td>
                    
                    <% strHoursFinal =[] %> <% sum = 0 %> 
                    
+                   
+                   
                    	<% (0..(iInOutCount-1)).each do |j| %>
-	    				 <td width="5%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> <%= arrTimeCard[k][j.to_s].blank? ? " " : showtime(arrTimeCard[k][j.to_s].split('-')[0]) %> </td>
-	    			     <td width="5%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> <%= arrTimeCard[k][j.to_s].blank? ? " " : showtime(arrTimeCard[k][j.to_s].split('-')[1]) %> </td>
+                   	      
+                   	       
+                   	       
+                   	       
+                   	       
+                   	
+	    				 <td width="5%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> <%= arrTimeCard[k][j.to_s].blank? ? " " : showtime(arrTimeCard[k][j.to_s].split('-')[0]) %>
+	    				                 &nbsp;&nbsp;&nbsp; <%= arrTimeCard[k][j.to_s].blank? ? " " : arrTimeCard[k][j.to_s].split('-')[3]  %>
+	    				   </td>
+	    			     <td width="5%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> <%= arrTimeCard[k][j.to_s].blank? ? " " : showtime(arrTimeCard[k][j.to_s].split('-')[1]) %> 
+	    			        			 &nbsp;&nbsp;&nbsp; <%= arrTimeCard[k][j.to_s].blank? ? " " : arrTimeCard[k][j.to_s].split('-')[3] %>
+	    			     </td>
 					
 						 <% arrTimeCard[k][j.to_s].blank? ? " " : strHours0 = (arrTimeCard[k][j.to_s].split('-')[2]) %>
 					 
@@ -116,36 +154,24 @@
 
 
 		<% @times[3].each do |timesecond| %>
+		
+		   	<% @Strdesc = PayType.where('pay_code = ?' ,timesecond.CODE).pluck(:pay_code_desc) %>
+             
   			<tr>
- 
-  
-   
+          
     		<td width="10%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> Transac:&nbsp;&nbsp;&nbsp;<%= timesecond.PDATE.strftime("%a")%> <%= timesecond.PDATE.strftime("%Y-%m-%d") %> </td>
     
-    		<td width="10%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> <% if timesecond.CODE == 'SIC' %>
-    	                                                                                                  Sick 
-    	                                                                                                <% elsif timesecond.CODE == 'VAC' %>
-    	                                                                                                     Vacation 
-    	                                                                                                <% elsif timesecond.CODE == 'PH' %>
-    	                                                                                                     Holiday Pay
- 
-    	                                                                                                 <%end%>
-    	                                                                                                  </td>
+    		<td width="10%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> <%= @Strdesc[0] %> </td>
     	
     		<td width="10%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> <%= timesecond.DEPT_GROUP  + " " + " " +  timesecond.CENTRE %> </td>
 
      		<td width="10%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> Amount: </td>
      	
      		<td width="10%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> 
-     																			<% if timesecond.CODE == 'VAC' %>
-    	                                                                             8.00 
-    	                                                                             
-    	                                                                          <% elsif timesecond.CODE == 'SIC' %>
-    	                                                                              <% sicktime = Float(timesecond.HOURS)/60 %>
+     																			
+    	                                                                              <% @Floathours = Float(timesecond.HOURS)/60 %>
     	                                                                              
-    	                                                                              <%= number_with_precision(sicktime,precision: 2) %>
-    	                                                                                                
-    	                                                                        <%end%> </td>
+    	                                                                              <%= number_with_precision(@Floathours,precision: 2) %>  </td>
   			</tr>
   
 
@@ -154,7 +180,7 @@
 	</table>
  <%end%>
  </br>
- <% if params[:emp_id] != "" %> 
+ <% if (params[:emp_id] != "" ) %> 
    
  	<table cellpadding=0 cellspacing=0 border=0 style="width:100%">
    
@@ -167,81 +193,52 @@
         
         <th width="15%" height="28" align="left"   valign="middle" bgcolor="#008080" class="whitetext">Amount</th>
        
-        <th width="15%" height="28" align="left"   valign="middle" bgcolor="#008080" class="whitetext">Dollar</th>
+    
        
                 
       </tr>
       
   	     <% @Arrdepartment.each do |arrdepart| %>
   	       <tr>
-  	          
-  	             <% departfinal = arrdepart[0] + " " + arrdepart[1] %>
+  	            <% @Strdptdesc = Department.where('department_code = ?' ,arrdepart[1]).pluck(:department_desc) %> 
+  	             <% if @Strdptdesc.blank? %>
+  	             <% departdesc = arrdepart[1]  %>
+  	             <% departfinal = arrdepart[0] + " " + departdesc %>
+  	             
+  	             <%else%>
+  	             
+  	             <%  @Arrdepartdesc = @Strdptdesc %>
+  	             <% departfinal = arrdepart[0] + " " + @Arrdepartdesc[0] %>
+  	             
+  	             <%end%>
+  	            
+  	             <% @Arrdepartwisecode = TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=? and  ("DEPT_GROUP")=? and ("CENTRE") =?', params[:emp_id],params[:from_date],params[:to_date],arrdepart[0],arrdepart[1]).distinct.pluck(:"CODE") %>
   	              
-  	             <% regulardataregular =  TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=? and  ("DEPT_GROUP")=? and ("CENTRE") =? and ("CODE")=? ',params[:emp_id],params[:from_date],params[:to_date],arrdepart[0],arrdepart[1],'(W)').pluck("sum (\"HOURS\") as total_hours") %>
-   
-         		 <% regulardatatimeregular = Float(regulardataregular[0])/60 if !regulardataregular[0].nil?  %>
-         	 
-             <tr>
+  	             
+  	             <% @Arrdepartwisecode.each do |departwisecodefinal| %>
+  	             
+  	             <% @Arrcodedesc = PayType.where('pay_code = ?' ,departwisecodefinal).pluck(:pay_code_desc) %>
+  	             
+  	             <%  @Strcodefinal = @Arrcodedesc.blank? ? departwisecodefinal : @Arrcodedesc[0] %>
+  	           
+  	             
+         	     <% regulardataregular =  TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=? and  ("DEPT_GROUP")=? and ("CENTRE") =?  and ("CODE")=? ',params[:emp_id],params[:from_date],params[:to_date],arrdepart[0],arrdepart[1],departwisecodefinal).pluck("sum (\"HOURS\") as total_hours") %>
+			     <% regulardatatimeregular = Float(regulardataregular[0])/60 if !regulardataregular[0].nil?  %>		
+					
+              	<tr>
   	              
-  	         	 <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> <%= departfinal %> </td>
+  	         	 <td width="40%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> <%= departfinal %> </td>
   	         
-  	          	 <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> Regular </td>
+  	          	 <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> <%= @Strcodefinal  %> </td>
   	           	 <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> Time </td>
   	             <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> <%= regulardatatimeregular.blank? ? 0.00 :  number_with_precision(regulardatatimeregular,precision: 2) %>  </td>
-  	             <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> $0.00 </td>
   	             
-  	        </tr> 
-  	        
-  	              <% regulardatasick =  TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=?  and ("DEPT_GROUP")=? and ("CENTRE") =? and ("CODE")=? ',params[:emp_id],params[:from_date],params[:to_date],arrdepart[0],arrdepart[1],'SIC').pluck("sum (\"HOURS\") as total_hours") %>
-   
-         		  <% regulardatatimesick = Float(regulardatasick[0])/60 if !regulardatasick[0].nil?  %>
-         	 <% if regulardatasick[0] %> 
-             <tr>
-  	              
-  	         	 <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext">  </td>
+  	             
+  	         	</tr> 
   	         
-  	          	 <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> Sick </td>
-  	           	 <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> Time </td>
-  	             <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> <%= regulardatatimesick.blank? ? 0.00 :  number_with_precision(regulardatatimesick,precision: 2) %>  </td>
-  	             <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> $0.00 </td>
-  	           
-  	        </tr>
-  	         <% end %>
+  	         <%end%>
   	        
-  	        	 <% regulardatavac =  TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=?  and ("DEPT_GROUP")=? and ("CENTRE") =? and ("CODE")=? ',params[:emp_id],params[:from_date],params[:to_date],arrdepart[0],arrdepart[1],'VAC').pluck("sum (\"HOURS\") as total_hours") %>
-   
-         		 <% regulardatatimevac = Float(regulardatavac[0])/60 if !regulardatavac[0].nil?  %>
-         	  <% if regulardatavac[0] %>	 
-              <tr>
-  	              
-  	         	 <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext">  </td>
-  	         
-  	          	 <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> vacation </td>
-  	           	 <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> Time </td>
-  	             <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> <%= regulardatatimevac.blank? ? 0.00 :  number_with_precision(regulardatatimevac,precision: 2) %>  </td>
-  	             <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> $0.00 </td>
   	           
-  	          </tr>
-  	          <% end %>
-  	    
-  	           
-  	        
-  	        	 <% regulardataholiday =  TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=?  and ("DEPT_GROUP")=? and ("CENTRE") =? and ("CODE")=? ',params[:emp_id],params[:from_date],params[:to_date],arrdepart[0],arrdepart[1],'PH').pluck("sum (\"HOURS\") as total_hours") %>
-  
-         		 <% regulardatatimeholiday = Float(regulardataholiday[0])/60 if !regulardataholiday[0].nil?  %>
-         	 <% if regulardataholiday[0] %>	
-             <tr>
-  	              
-  	         	 <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext">  </td>
-  	         
-  	          	 <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> Holiday </td>
-  	           	 <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> Time </td>
-  	             <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> <%= regulardatatimeholiday.blank? ? 0.00 :  number_with_precision(regulardatatimeholiday,precision: 2) %>  </td>
-  	             <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> $0.00 </td>
-  	           
-  	        </tr>
-      	    <% end %>
-
   	    </tr> 
   	        
   	  <% end %>
@@ -252,81 +249,48 @@
   	   </br>
   	      <% if params[:emp_id] != "" %> 
   			<table cellpadding=0 cellspacing=0 border=0 style="width:100%">
+  			 	 <tr>
+         		     <th width="20%" height="28"  align="center" bgcolor="#008080" class="whitetext"> Employee Total </th>
+         		     <th width="20%" height="28"  align="left"  valign="middle" bgcolor="#008080" class="whitetext"> </th>
+        			 <th width="15%" height="28" align="left"   valign="middle" bgcolor="#008080" class="whitetext"> </th>
+        
+        			 <th width="15%" height="28" align="left"   valign="middle" bgcolor="#008080" class="whitetext"> </th>
+
+         		 </tr>
+  			  	<% @ArrPaytypecode = TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=?', params[:emp_id],params[:from_date],params[:to_date]).distinct.pluck(:"CODE") %>
+				<% @ArrPaytypecode.each do |arrpaytypecodefinal| %>
   			
-  	       		 <% employeetotalregular =  TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=?  and ("CODE")=? ',params[:emp_id],params[:from_date],params[:to_date],'(W)').pluck("sum (\"HOURS\") as total_hours") %>
-   
+  	       		 <% employeetotalregular =  TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=?  and ("CODE")=? ',params[:emp_id],params[:from_date],params[:to_date],arrpaytypecodefinal).pluck("sum (\"HOURS\") as total_hours") %>
+  
          		 <% employeetotaltimeregular = Float(employeetotalregular[0])/60 if !employeetotalregular[0].nil?  %>
+         		 
+         		 <% @empcodedesc = PayType.where('pay_code = ?' ,arrpaytypecodefinal).pluck(:pay_code_desc) %>
+  	             
+  	             <%  @Strempcodefinal = @empcodedesc.blank? ? arrpaytypecodefinal : @empcodedesc[0] %>
+         		 
+         		 
 			 
   	         <tr>    
-  	         	 <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> Employee Total </td>
-  	         
-  	          	 <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> Regular </td>
+  	         	 <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> <%=@Strempcodefinal%> </td>
   	           	 <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> Time </td>
   	             <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> <%= employeetotaltimeregular.blank? ? 0.00 :  number_with_precision(employeetotaltimeregular,precision: 2) %>  </td>
-  	             <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> $0.00 </td>
+  	             <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> </td>
+
   	      	 </tr>
   	      	  
-  	      	 
-  	       		 <% employeetotalsick =  TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=?  and ("CODE")=? ',params[:emp_id],params[:from_date],params[:to_date],'SIC').pluck("sum (\"HOURS\") as total_hours") %>
-   
-         		 <% employeetotaltimesick = Float(employeetotalsick[0])/60 if !employeetotalsick[0].nil?  %>
-			       	  
-			  <% if employeetotaltimesick %>	 
-
-  	         <tr>    
-  	         	 <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext">  </td>
-  	         
-  	          	 <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> Sick </td>
-  	           	 <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> Time </td>
-  	             <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> <%= employeetotaltimesick.blank? ? 0.00 :  number_with_precision(employeetotaltimesick,precision: 2) %>  </td>
-  	             <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> $0.00 </td>
-  	      	 </tr>
-  	      	 <% end %>
-  	      	
-  	       		 <% employeetotalvac =  TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=?  and ("CODE")=? ',params[:emp_id],params[:from_date],params[:to_date],'VAC').pluck("sum (\"HOURS\") as total_hours") %>
-   
-         		 <% employeetotaltimevac = Float(employeetotalvac[0])/60 if !employeetotalvac[0].nil?  %>
-         	   <% if employeetotaltimevac %>	 
-
-  	          <tr>    
-  	         	 <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext">  </td>
-  	         
-  	          	 <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> Vacation </td>
-  	           	 <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> Time </td>
-  	             <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> <%= employeetotaltimevac.blank? ? 0.00 :  number_with_precision(employeetotaltimevac,precision: 2) %>  </td>
-  	             <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> $0.00 </td>
-  	      	 </tr>
-  	      	  <% end %>
-
-  	      	 
-  	       		 <% employeetotalholiday =  TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=?  and ("CODE")=? ',params[:emp_id],params[:from_date],params[:to_date],'PH').pluck("sum (\"HOURS\") as total_hours") %>
-   
-         		 <% employeetotaltimeholiday = Float(employeetotalholiday[0])/60 if !employeetotalholiday[0].nil?  %>
- 			<% if employeetotaltimeholiday %>
- 			
- 			<tr>
-  	              
-  	         	 <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext">  </td>
-  	         
-  	          	 <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> Holiday </td>
-  	           	 <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> Time </td>
-  	             <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> <%= employeetotaltimeholiday.blank? ? 0.00 :  number_with_precision(employeetotaltimeholiday,precision: 2) %>  </td>
-  	             <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> $0.00 </td>
-  	      	 </tr>
-  	      	<% end %>
-  	      	
+  	      	 <%end%>
+  	       		
   	       	 
   	      </table>
   	      <%end%>
   	</br>
   	</br>
-  	
- <script>
+  
  
-   $(document).ready(function() {
-    $('#example').DataTable( {
-        "scrollX": true
-    } );
-} );
- </script> 	
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+ <%else%>
+        </br>
+    	<div align = "center"> <b>  Time Card Report From Date : <%= params[:from_date] %> to To Date : <%= params[:to_date] %> </b> </div>
+ 		<p align = "center"> <b> No records found!!.</b> </p>
+ <%end%>	
+  	
+

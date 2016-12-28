@@ -139,7 +139,8 @@
                                                     <td>
                                                         <span class="welcome">Welcome <strong>
                                                          <% name =  current_user.first_name + ' ' + current_user.last_name %>
-                                                           <%= link_to name,{:action => "my_account",:controller => "users"},:style=>"color:#FBD84B;" %>   
+                                                           <%= name  %>  
+                                                           <%#= link_to name,{:action => "my_account",:controller => "users"},:style=>"color:#FBD84B;" %>   
                                                          </strong></span>
                                                     </td>
                                                 </tr>

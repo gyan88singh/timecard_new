@@ -20,12 +20,18 @@ class TimeReportsController < ApplicationController
     
     
      @times = TimeSheet.search_datewise_time_report(params[:emp_id],params[:from_date],params[:to_date])
+     
+      
+   # if @times == nil
+    #     flash[:notice] = "No Records Found."
+    #          redirect_to "/time_home"
+    #   else 
        
      @Arrdepartment = TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=?',params[:emp_id],params[:from_date],params[:to_date]).distinct.pluck(:"DEPT_GROUP",:"CENTRE") if params[:emp_id] != "" 
        puts @Arrdepartment.inspect
        
      
-       
+   # end 
        
        
        
