@@ -60,7 +60,7 @@ Rails.application.routes.draw do
   
   get "my_account" => "users#my_account"
     
-  get "change_password" => "users#change_password"
+  get "chnage_password" => "users#change_password"
   
   resources :users do
      get "delete"
@@ -68,16 +68,7 @@ Rails.application.routes.draw do
      get "edit_department"
      post "update_department"
     collection { get :new_export }
-      get "index" => "users#index"
-      
-      post "save_user_info" => "users#save_user_info"
-      get  "save_user_info" => "users#save_user_info"
-      
    end
-   
- # resources :users, only: [:show, :index] do
-  #  match :search, to: 'users#index', via: :post, on: :collection
-#  end
    
   resources :logins do
     get "login"
@@ -95,31 +86,26 @@ Rails.application.routes.draw do
      
   
    
-  #resources :users do
-   # collection do
-  #    match 'search' => 'users#search', via: [:get, :post], as: :search
-  #  end
- # end
+  resources :users do
+    collection do
+      match 'search' => 'users#search', via: [:get, :post], as: :search
+    end
+  end
      
   resources :employees do
     get "import_index"
       collection { post :import }
-    get 'download_file' , :on => :collection
-  end
+     end
    
    resources :time_sheets do
     
        collection { post :import }
    end  
       
-  resources :time_reports do
-    collection do
-     match 'search_time_report' => 'time_reports#search_time_report', via: [:get, :post], as: :search_time_report
-      get :timecard_report
-    end
-   end  
-  get "time_home" => 'time_reports#time_home'
-  
+  #resources :time_reports do
+     
+     get "time_home" => 'time_reports#time_home'
+  # end  
   
   resources :departments_users do
       

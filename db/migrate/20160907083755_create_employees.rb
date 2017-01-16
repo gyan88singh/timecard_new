@@ -1,6 +1,7 @@
 class CreateEmployees < ActiveRecord::Migration
   def change
     create_table :employees do |t|
+           
             t.integer :PAYROLL, limit: 8
 
             t.string :LAST_NAME
@@ -35,7 +36,8 @@ class CreateEmployees < ActiveRecord::Migration
 
             t.string :TIME_ZONE
 
-            t.integer :COMMON_ID, limit: 8
+            t.string :COMMON_ID
+           
             
       t.timestamps null: false
     end

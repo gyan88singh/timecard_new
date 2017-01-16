@@ -11,14 +11,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160927073227) do
+ActiveRecord::Schema.define(version: 20170106064720) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "companies", force: :cascade do |t|
+    t.string   "pay_code"
+    t.string   "pay_code_desc"
+    t.boolean  "status"
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "departments", force: :cascade do |t|
-    t.string   "department_name"
-    t.string   "status"
+    t.string   "department_code"
+    t.string   "department_desc"
+    t.boolean  "status"
     t.integer  "created_by"
     t.integer  "updated_by"
     t.datetime "created_at"
@@ -57,12 +68,32 @@ ActiveRecord::Schema.define(version: 20160927073227) do
     t.datetime "updated_at",      null: false
   end
 
+  create_table "job_titles", force: :cascade do |t|
+    t.string   "job_title_code"
+    t.string   "job_title_desc"
+    t.boolean  "status"
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "login_details", force: :cascade do |t|
     t.integer  "user_id"
     t.datetime "login_time"
     t.string   "remarks"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "pay_types", force: :cascade do |t|
+    t.string   "pay_code"
+    t.string   "pay_code_desc"
+    t.boolean  "status"
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "time_sheets", force: :cascade do |t|
@@ -166,6 +197,7 @@ ActiveRecord::Schema.define(version: 20160927073227) do
     t.integer  "updated_by"
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
+    t.string   "user_name"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
