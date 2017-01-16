@@ -1,6 +1,6 @@
 class TimeSheet < ActiveRecord::Base
   
-  require 'CSV' 
+ # require 'CSV' 
    require 'roo'  
   require 'roo-xls'         
    require 'rubygems'
@@ -59,11 +59,8 @@ class TimeSheet < ActiveRecord::Base
   
   
   def self.search_datewise_time_report(payroll,from_date,to_date)
-  
-         code = '(W)'
-      
-    #pay_types = PayType.where(pay_code =? , ('(W)' ,'(X)'))
-         
+     #raise payroll.inspect
+
          if payroll == ""
           # a = "SELECT date(\"CLK_ON\"),date(\"CLK_ON\"),concat_ws(''''-'''', \"time\"(\"CLK_ON\")::text, \"time\"(\"CLK_OFF\")::text,(\"HOURS\")::text) FROM time_sheets 
           #   WHERE ( date(\"CLK_ON\") >=''''" + from_date + "'''' and date(\"CLK_OFF\") <=''''" + to_date + "'''' and (\"CODE\") = ''''" + code + "'''') ORDER BY 2,3"
@@ -106,28 +103,26 @@ class TimeSheet < ActiveRecord::Base
               end
           
               #@timessecond = TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=? and (("CODE") = ? or ("CODE") = ? or ("CODE") = ?)',payroll,from_date,to_date,'SIC','VAC','PH')
-              @timessecond = TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=? and (("CODE") != ? and ("CODE") != ? )',payroll,from_date,to_date,'(W)','(X)')
-              #raise @timessecond.inspect
          
      #### Megha Code ###############       
-              @payrollids = []
-              @payrollwiseattendancearray = [] 
-              @previouspayroll = "";
-              @currentpayroll = "";
-              @attendance = [];
+             # @payrollids = []
+             # @payrollwiseattendancearray = [] 
+             # @previouspayroll = "";
+             # @currentpayroll = "";
+             # @attendance = [];
                 
-              puts " original array: "
-              puts @arrfinaltime
+            #  puts " original array: "
+            #  puts @arrfinaltime
   
-              @arrfinaltime.each do |finaltime|
-                  @currentpayroll = finaltime["attendancedate"].split('|')[1]
-                  puts "current " + @currentpayroll
-                  puts "previous " + @previouspayroll
+             # @arrfinaltime.each do |finaltime|
+             #     @currentpayroll = finaltime["attendancedate"].split('|')[1]
+             #     puts "current " + @currentpayroll
+              #    puts "previous " + @previouspayroll
                     
-                  if @payrollids.blank? 
-                      @payrollids.push(@currentpayroll)
-                      @previouspayroll = @currentpayroll
-                      @attendance.push(finaltime)
+              #    if @payrollids.blank? 
+               #       @payrollids.push(@currentpayroll)
+               #       @previouspayroll = @currentpayroll
+               #       @attendance.push(finaltime)
                       #puts "if: Payrollids "
                       #puts @payrollids 
                       #puts " previous payroll: " + @previouspayroll
@@ -136,8 +131,8 @@ class TimeSheet < ActiveRecord::Base
                       #puts @attendance
                       #puts " final array: "
                       #puts @payrollwiseattendancearray
-                  elsif !@payrollids.blank? && (@currentpayroll == @previouspayroll)
-                      @attendance.push(finaltime)
+                #  elsif !@payrollids.blank? && (@currentpayroll == @previouspayroll)
+                   #   @attendance.push(finaltime)
                       #puts "first elsif: Payrollids "
                       #puts @payrollids 
                       #puts " previous payroll: " + @previouspayroll
@@ -146,13 +141,13 @@ class TimeSheet < ActiveRecord::Base
                       #puts @attendance
                       #puts " final array: "
                       #puts @payrollwiseattendancearray
-                  elsif !@payrollids.blank? && (@currentpayroll != @previouspayroll)
-                      @previouspayroll = @currentpayroll 
-                      @payrollids.push(@currentpayroll)
+                #  elsif !@payrollids.blank? && (@currentpayroll != @previouspayroll)
+                 #     @previouspayroll = @currentpayroll 
+                 #     @payrollids.push(@currentpayroll)
                       #@payrollwiseattendancearray.push(@attendance)
-                    @payrollwiseattendancearray << @attendance
-                      @attendance = []
-                      @attendance.push(finaltime)
+                  #  @payrollwiseattendancearray << @attendance
+                  #    @attendance = []
+                   #   @attendance.push(finaltime)
                       
                       #puts "second elsif: Payrollids "
                       #puts @payrollids 
@@ -162,23 +157,23 @@ class TimeSheet < ActiveRecord::Base
                       #puts @attendance
                       #puts " final array: "
                       #puts @payrollwiseattendancearray
-                  end
-              end #loop
+                 # end
+             # end #loop
              
-             if @payrollwiseattendancearray.blank?
-                @payrollwiseattendancearray << @attendance 
-             end
+            # if @payrollwiseattendancearray.blank?
+              #  @payrollwiseattendancearray << @attendance 
+            # end
              
-             puts "start array"
+           #  puts "start array"
              #puts @attendance
-             puts @payrollwiseattendancearray
-             puts "end array"
+           #  puts @payrollwiseattendancearray
+           #  puts "end array"
    #### Code End by Megha########## 
                   
-           return b[0],@arrfinaltime,payroll,@timessecond;
+           return b[0],@arrfinaltime,payroll;
            
       else
-           return nil
+        
       end
     
   end
