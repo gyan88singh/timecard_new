@@ -2,9 +2,62 @@ class TimeSheet < ActiveRecord::Base
   
  # require 'CSV' 
    require 'roo'  
-  require 'roo-xls'         
+   require 'roo-xls'         
    require 'rubygems'
-  require 'uri'  # Needed to prevent a NameError on URI
+   require 'uri'  # Needed to prevent a NameError on URI
+   require 'fileutils'
+ 
+  
+  def self.import_excel_sheet
+    
+    puts "file to be opened"
+   
+    # RuntimeError: "[\"public/times_excel/Book1.xls\",\"public/times_excel/Book2.xls\ "]"
+    #file = File.join(RAILS_ROOT, 'public', 'Book1.xls')
+    
+    files_list = Dir['public/times_excel/*']    
+      files_list.each do |files| 
+           # spreadsheet = Roo::Spreadsheet.open('public/times_excel/Book1.xls')
+            spreadsheet = Roo::Spreadsheet.open(files)                                                                                   
+            puts "file opened"     
+            
+              header = spreadsheet.row(5)
+            puts "file read"
+               if header == ["WORKED_ID", "ID", "PAYROLL", "PDATE", "SHIFT", "ON_TIME", "OFF_TIME", "CODE", "CODE_TYPE", "LINE_NO", "PAY_TYPE", "DEPT_GROUP", "DEPARTMENT", "CENTRE", "POS", "DOCKET", "QUANTITY", "STD_RATE", "HOURS", "HOUR_TYPE", "NO_OT_REC", "JOB_PREM", "AM_PREM_HR", "PM_PREM_HR", "CALC_FLAG", "STATUS", "WAS_LL", "OT_TYPE", "NOERASE", "CLK_ON", "CLK_OFF", "UDF1", "UDF2", "NOTE", "CENTRE1", "POS1", "RDOCKET", "TDEFAULT", "FLAG1", "FLAG2", "FLAG3", "FLAG4", "FLAG5", "RATE", "AM_PREM_RATE", "PM_PREM_RATE", "JOB_ID", "UDF_KEY", "OPERATION", "UDF3", "UDF4", "PIECE_RATE", "WORK_ORDER_ID", "WORK_ITEM_ID", "WOI_CONTROL", "APPROVED_STATUS", "APPROVED_BY", "APPROVED_TIME", "EXT_ATTR_1", "EXT_ATTR_2", "EXT_ATTR_3", "EXT_ATTR_4", "EXT_ATTR_5", "EXT_ATTR_6", "EWA_1", "EWA_2", "EWA_3", "EWA_4", "EWA_5", "EWA_6", "EWA_7", "EWA_8", "EWA_9", "EWA_10", "EWA_11", "EWA_12", "EWA_13", "EWA_14", "EWA_15", "EWA_16", "EWA_17", "EWA_18", "EWA_19", "EWA_20"]
+              
+               
+             (6..spreadsheet.last_row).each do |i|
+        
+              puts i.inspect
+                      row = Hash[[header, spreadsheet.row(i)].transpose]
+                      timesheet = find_by(WORKED_ID: row["WORKED_ID"]) || new
+                      timesheet.attributes = row.to_hash
+                      timesheet.save!
+                 end
+                
+               end
+             puts "file read complete"
+             
+              FileUtils.cp files, 'public/times_completed_excel'
+   
+    
+              File.delete(files) if File.exist?(files)
+                
+      end
+      
+        #FileUtils.rm_rf(Dir['public/times_excel/Book1.xls', 'public/times_excel/Book2.xls']) 
+ 
+        #FileUtils.rm_r files.glob('/tmp/*')
+
+      
+      #FileUtils.rm_rf(Dir.glob('dir/*'))
+     # FileUtils.rm_rf('dir/to/remove')
+  
+      
+        #FileUtils.rm_rf Dir['public/times_excel/*']
+
+    
+  end
    
    def self.import(file)
      

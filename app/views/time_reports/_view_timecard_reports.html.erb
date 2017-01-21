@@ -1,10 +1,12 @@
-
-<% if !@finaltimesarray[0].nil?  %>
-    	 		<div align = "center" > <b>  Time Card Report From Date : <%= params[:from_date] %> to To Date : <%= params[:to_date] %> </b> </div>
-
+<% if params[:emp_id] == "" %>
+ 	<p align = "center"> <b> Payroll Is Mandatory!!.</b> </p>
+ 	
+<%else%>
+  
 <% @finaltimesarray.each do |timesfinal| %>
-
 	
+   <% if !timesfinal.nil?  %>
+  		 <div align = "center" > <b>  Time Card Report From Date : <%= params[:from_date] %> to To Date : <%= params[:to_date] %> </b> </div>
  		<div align= "right">
         
         <b>  <%= link_to image_tag("export.png"),timecard_report_time_reports_path(format: "xls",:emp_id => timesfinal[2].to_i,:from_date => params[:from_date],:to_date => params[:to_date]) %> </b>
@@ -355,16 +357,18 @@
   	      
   	</br>
   	</br>
+  	
   
-  <%end%>
+ <%else%>
+      
+ 		<p align = "center"> <b> No Records Found From Date : <%= params[:from_date] %> to To Date : <%= params[:to_date]%> </b> </p>
+ <%end%>
   
-  <%elsif  params[:emp_id] == "" %>
-                 <p align = "center"> <b> Payroll Is Mandatory!!.</b> </p>
+ <%end%>
+           
+ <%end%>
 
  
- <%else%>
-        </br>
-    	<div align = "center"> <b>  Time Card Report From Date : <%= params[:from_date] %> to To Date : <%= params[:to_date] %> </b> </div>
- 		<p align = "center"> <b> No records found!!.</b> </p>
- <%end%>
+  
+ 
 

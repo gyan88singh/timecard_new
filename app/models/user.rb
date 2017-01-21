@@ -24,17 +24,6 @@ class User < ActiveRecord::Base
   require 'net/ldap' # gem install ruby-net-ldap
   require 'csv'
   
-  SERVER = '172.28.48.51'
-  PORT = 389
-  BASE = 'tandon.local'
-  DOMAIN = 'tandon.local'
-  credentials = {
-    :method => :simple,
-    :username =>'suhas.dabhade@tandon.local',
-    :password => 'Infinx@10'
-  }
-  
-  
   def self.domain_authenticates(username,password)
     #raise username.inspect
       ldap = Net::LDAP.new :host => SERVER,:port => PORT, :base => BASE, :domain => DOMAIN,:auth => {
@@ -64,7 +53,7 @@ class User < ActiveRecord::Base
        ldap = Net::LDAP.new :host => SERVER,:port => PORT, :base => BASE, :domain => DOMAIN,:auth => {
                                                                                             :method => :simple,
                                                                                             :username =>'suhas.dabhade@tandon.local',
-                                                                                            :password => 'Infinx@10'
+                                                                                            :password => 'Xnifni01@'
                                                                                             }
            
                              

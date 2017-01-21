@@ -4,7 +4,7 @@ class SessionsController < ApplicationController
  
    
    def new
-     if (Rails.configuration.domain_authentication == true)
+     if (Rails.configuration.domain_authentication == false)
      
      render :layout=> false
      else
@@ -44,7 +44,7 @@ class SessionsController < ApplicationController
    end
  
  def create
-   if (Rails.configuration.domain_authentication == true)
+   if (Rails.configuration.domain_authentication == false)
      # username1 = ENV['USERNAME']
        # raise user.inspect    "gyanprakash.singh"
           username = params[:User][:domain_name]
