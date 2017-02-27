@@ -2,8 +2,9 @@ set :stage, :production
 
 #server '172.28.53.69', user: 'deploy', roles: %w{web app db}
 
-server '192.168.110.68', user: 'root', roles: %w{web app db}
+#server '192.168.110.68', user: 'root', roles: %w{web app db}
 
+server '10.110.32.240', user: 'root', roles: %w{web app db}
 
 # server-based syntax
 # ======================

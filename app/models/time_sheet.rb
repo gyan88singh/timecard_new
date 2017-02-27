@@ -15,7 +15,11 @@ class TimeSheet < ActiveRecord::Base
     # RuntimeError: "[\"public/times_excel/Book1.xls\",\"public/times_excel/Book2.xls\ "]"
     #file = File.join(RAILS_ROOT, 'public', 'Book1.xls')
     
-    files_list = Dir['public/times_excel/*']    
+#    files_list = Dir['smb://172.28.48.68/Suhasd_Intranet/RadNet/AttendanceReportingSystem/dump/*'] 
+# files_list = Dir['/home/root1/excel data/dump/*']
+   files_list = Dir['public/times_excel/*']
+ 
+ #   raise files_list.inspect    
       files_list.each do |files| 
            # spreadsheet = Roo::Spreadsheet.open('public/times_excel/Book1.xls')
             spreadsheet = Roo::Spreadsheet.open(files)                                                                                   
@@ -38,7 +42,7 @@ class TimeSheet < ActiveRecord::Base
                end
              puts "file read complete"
              
-              FileUtils.cp files, 'public/times_completed_excel'
+              FileUtils.cp files, 'smb://172.28.48.68/suhasd_intranet/RadNet/AttendanceReportingSystem/done'
    
     
               File.delete(files) if File.exist?(files)
