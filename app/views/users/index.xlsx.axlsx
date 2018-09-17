@@ -1,0 +1,21 @@
+require 'axlsx'
+xlsx_package = Axlsx::Package.new
+wb = xlsx_package.workbook
+wb.styles do |style|
+  highlight_cell = style.add_style(bg_color: "EFC376", border: Axlsx::STYLE_THIN_BORDER, sz: 10)
+  date_cell = style.add_style(bg_color: "EFC376" , format_code: "yyyy-mm-dd", border: Axlsx::STYLE_THIN_BORDER, sz: 10)
+  
+  heading = style.add_style alignment: {horizontal: :center}, b: true, sz: 10, bg_color: "0066CC", fg_color: "FF"
+
+wb.add_worksheet(name: "Users") do |sheet|
+  # this is the head row of your spreadsheet
+  sheet.add_row %w(Id FirstName LastName DomainName  is_admin Status Created_at Updated_at), style: heading
+  
+  
+  
+  # each user is a row on your spreadsheet
+  @userexport.each do |user|
+    sheet.add_row [user.id, user.first_name, user.last_name,user.domain_name,user.is_admin,user.status,user.created_at,user.updated_at], style: [nil, highlight_cell,highlight_cell,highlight_cell,highlight_cell,highlight_cell,date_cell,date_cell]
+  end
+end
+end

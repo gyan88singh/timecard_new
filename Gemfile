@@ -75,3 +75,13 @@ gem 'iconv'
  gem 'net-ldap'
 
 gem 'ntlm-sso'
+
+gem 'whenever', require: false
+
+#gem 'rubyzip'
+
+#gem 'rubyzip', require: 'zip'
+##gem 'zip'
+gem 'axlsx', '2.1.0.pre'
+gem 'axlsx_rails'
+

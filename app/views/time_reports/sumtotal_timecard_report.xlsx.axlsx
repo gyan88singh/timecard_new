@@ -1,0 +1,23 @@
+require 'axlsx'
+xlsx_package = Axlsx::Package.new
+wb = xlsx_package.workbook
+wb.styles do |style|
+  highlight_cell = style.add_style(bg_color: "EFC376", border: Axlsx::STYLE_THIN_BORDER, sz: 10)
+  date_cell = style.add_style(format_code: "mm-dd-yyyy hh:mm:ss", border: Axlsx::STYLE_THIN_BORDER, sz: 10)
+  
+  heading = style.add_style alignment: {horizontal: :center}, b: true, sz: 10, bg_color: "0066CC", fg_color: "FF"
+
+wb.add_worksheet(name: "SumTotal") do |sheet|
+  # this is the head row of your spreadsheet
+  sheet.add_row %w(WORKED_ID ID PAYROLL PDATE  SHIFT ON_TIME OFF_TIME CODE CODE_TYPE LINE_NO PAY_TYPE DEPT_GROUP DEPARTMENT	CENTRE POS DOCKET QUANTITY STD_RATE	HOURS	HOUR_TYPE	NO_OT_REC	JOB_PREM	AM_PREM_HR	PM_PREM_HR	CALC_FLAG	STATUS	WAS_LL	OT_TYPE	NOERASE	CLK_ON	CLK_OFF	UDF1	UDF2	NOTE	CENTRE1	POS1	RDOCKET	TDEFAULT	FLAG1	FLAG2	FLAG3	FLAG4	FLAG5	RATE	AM_PREM_RATE	PM_PREM_RATE	JOB_ID	UDF_KEY	OPERATION	UDF3	UDF4	PIECE_RATE	WORK_ORDER_ID	WORK_ITEM_ID	WOI_CONTROL	APPROVED_STATUS	APPROVED_BY	APPROVED_TIME	EXT_ATTR_1	EXT_ATTR_2	EXT_ATTR_3	EXT_ATTR_4	EXT_ATTR_5	EXT_ATTR_6	EWA_1	EWA_2	EWA_3	EWA_4	EWA_5	EWA_6	EWA_7	EWA_8	EWA_9	EWA_10	EWA_11	EWA_12	EWA_13	EWA_14	EWA_15	EWA_16	EWA_17	EWA_18	EWA_19	EWA_20), style: heading
+  
+  
+  
+  # each user is a row on your spreadsheet
+  @sumTotalTimecard.each do |sumtotaltimecard|
+  #raise sumtotaltimecard.PDATE.strftime('%m-%d-%yyyy %H:%M:%S').inspect
+  
+    sheet.add_row [sumtotaltimecard.WORKED_ID, sumtotaltimecard.ID, sumtotaltimecard.PAYROLL,sumtotaltimecard.PDATE.strftime('%m-%d-%y %H:%M:%S'),sumtotaltimecard.SHIFT,sumtotaltimecard.ON_TIME.strftime('%m-%d-%y %H:%M:%S') ,sumtotaltimecard.OFF_TIME.strftime('%m-%d-%y %H:%M:%S'),sumtotaltimecard.CODE,sumtotaltimecard.CODE_TYPE,sumtotaltimecard.LINE_NO,sumtotaltimecard.PAY_TYPE,sumtotaltimecard.DEPT_GROUP,sumtotaltimecard.DEPARTMENT,sumtotaltimecard.CENTRE,sumtotaltimecard.POS,sumtotaltimecard.DOCKET,sumtotaltimecard.QUANTITY,sumtotaltimecard.STD_RATE,sumtotaltimecard.HOURS,sumtotaltimecard.HOUR_TYPE,sumtotaltimecard.NO_OT_REC,sumtotaltimecard.JOB_PREM,sumtotaltimecard.AM_PREM_HR,sumtotaltimecard.PM_PREM_HR,sumtotaltimecard.CALC_FLAG,sumtotaltimecard.STATUS,sumtotaltimecard.WAS_LL,sumtotaltimecard.OT_TYPE,sumtotaltimecard.NOERASE,sumtotaltimecard.CLK_ON.strftime('%m-%d-%y %H:%M:%S'),sumtotaltimecard.CLK_OFF.strftime('%m-%d-%y %H:%M:%S'),sumtotaltimecard.UDF1,sumtotaltimecard.UDF2,sumtotaltimecard.NOTE,sumtotaltimecard.CENTRE1,sumtotaltimecard.POS1,sumtotaltimecard.RDOCKET,sumtotaltimecard.TDEFAULT,sumtotaltimecard.FLAG1,sumtotaltimecard.FLAG2,sumtotaltimecard.FLAG3,sumtotaltimecard.FLAG4,sumtotaltimecard.FLAG5,sumtotaltimecard.RATE,sumtotaltimecard.AM_PREM_RATE,sumtotaltimecard.PM_PREM_RATE,sumtotaltimecard.JOB_ID,sumtotaltimecard.UDF_KEY,sumtotaltimecard.OPERATION,sumtotaltimecard.UDF3,sumtotaltimecard.UDF4,sumtotaltimecard.PIECE_RATE,sumtotaltimecard.WORK_ORDER_ID,sumtotaltimecard.WORK_ITEM_ID,sumtotaltimecard.WOI_CONTROL,sumtotaltimecard.APPROVED_STATUS,sumtotaltimecard.APPROVED_BY,sumtotaltimecard.APPROVED_TIME,sumtotaltimecard.EXT_ATTR_1,sumtotaltimecard.EXT_ATTR_2,sumtotaltimecard.EXT_ATTR_3,sumtotaltimecard.EXT_ATTR_4,sumtotaltimecard.EXT_ATTR_5,sumtotaltimecard.EXT_ATTR_6, (sumtotaltimecard.EWA_1.nil? ? "" : sumtotaltimecard.EWA_1.strftime('%m-%d-%y %H:%M:%S')) ,sumtotaltimecard.EWA_2,sumtotaltimecard.EWA_3,sumtotaltimecard.EWA_4,sumtotaltimecard.EWA_5,sumtotaltimecard.EWA_6,sumtotaltimecard.EWA_7,sumtotaltimecard.EWA_8,sumtotaltimecard.EWA_9,sumtotaltimecard.EWA_10,sumtotaltimecard.EWA_11,sumtotaltimecard.EWA_12 ,sumtotaltimecard.EWA_13,sumtotaltimecard.EWA_14,sumtotaltimecard.EWA_15,sumtotaltimecard.EWA_16,sumtotaltimecard.EWA_17,sumtotaltimecard.EWA_18,sumtotaltimecard.EWA_19,sumtotaltimecard.EWA_20], style: [nil, nil, nil, date_cell,nil, date_cell , date_cell,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil, date_cell, date_cell,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,date_cell,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil ,nil,nil,nil,nil,nil,nil,nil,nil]
+  end
+end
+end

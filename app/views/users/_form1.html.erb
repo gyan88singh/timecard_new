@@ -23,7 +23,7 @@
 
         <div class="form-group">
           <%= link_to "CSV", users_path(format: "csv") %>   |
-          <%= link_to "Excel", users_path(format: "xls") %>
+	  <%= link_to "Excel", users_path(format: :xlsx) %> 
          <%#= radio_button_tag 'products', 'CSV',true %>  <%#= label_tag :CSV %>
         </div>
       </div>

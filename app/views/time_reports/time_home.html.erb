@@ -1,6 +1,6 @@
 <div class ='container'>
  <%#= search_form_for @time_sheet, url: time_home_path, method: :post do |f| %>
- <form accept-charset="UTF-8" action="/time_reports/search_time_report" method="post" data-remote="true">
+ <!-- <form accept-charset="UTF-8" action="/time_reports/search_time_report" method="post" data-remote="true"> -->
 
    <table border="0" cellspacing="0" cellpadding="0" width="100%" class="tblmain">
               <tr>
@@ -17,17 +17,20 @@
                                    </td>
                                    <td width="8%" style="color: #6D6D6D !important;">
       
-                                             <input type="text" id="datepicker1" name="from_date" data-provide='datepicker' readonly ="">
+                                               <input type="text" id="datepicker1" name="from_date" data-provide='datepicker'>  
+                                         <!--- <input type="text"  name="from_date"  >  -->
+                                          
                                      </td>
                                     <td width="6%">
                                                <label>To Date</label>
                                      </td>
                                      <td width="10%" style="color: #6D6D6D !important;">
-                                            <input type="text" id="datepicker2" name="to_date" data-provide='datepicker' readonly ="" >
+                                     			<input type="text" id="datepicker2" name="to_date" data-provide='datepicker'>
+                                         <!--  <input type="text" id="datepicker2" name="to_date" data-provide='datepicker' readonly ="" > -->
+                                       	 <!-- <input type="text" name="to_date" > -->
                                       </td>
                                    
                                 </tr>
-                                
                                
                                 
                                 <tr>
@@ -39,35 +42,54 @@
                                              <input type="text" id="empname" name="emp_name" >
                                      </td>  -->
                                      
-                                    <td width="6%">
-                                            <span class="mandatory_color" style="color:red">*</span>   <label> Payroll </label>
+                                     <td width="6%">
+                                             <label> Department </label>
+                                     </td>
+                                     <td width="5%" style="color: #6D6D6D !important;">
+                                         
+          
+       				  <%#= collection_select(:department, :department_id, Department.all,:department_code, {:prompt => 'Please select'})%>
+                  		
+				 <%= collection_select(:department, :department_id, Department.all,:department_code, :name_with_initial, {:prompt => 'Please select'})%>					 
+                                      </td>
+                                     
+                                    
+                                      
+                                     <td width="6%">
+                                             <label> Employee LastName </label>
+                                     </td>
+                                     <td width="10%" style="color: #6D6D6D !important;">
+                                            <input type="text" id="emplastName" name="emp_lastName">  
+                                      </td>
+                                      
+                                          
+                                      
+                                </tr>
+                                
+                                <tr>      
+                                    
+                                      <td width="6%">
+                                           <!-- <span class="mandatory_color" style="color:red">*</span> -->   <label> Employee ID </label>
                                      </td>
                                      <td width="10%" style="color: #6D6D6D !important;">
                                             <input type="text" id="empid" name="emp_id">  
-                                      </td>
-                                         
-                                      <td width="10%" align="left">
+                                     </td>
+                                     
+                                     <td width="10%" align="center">
                                             <%#= image_submit_tag 'search.png' %>
                                             <input alt="Search" src="/images/search.png" type="image" id="navButton">
                                       </td>
-                                      
-                                      <td>
-                    					<span id="image" style="display: none;" valign="top" align="right"><img src="/images/ajax-loader.gif" alt="ajax_loader.gif"/>
-                        					<font color='red'>
-                           					 Loading Please Wait.
-                        					</font>
-                    					</span>
-                					 </td>
+                                    
                                 </tr>
                                 
                               
                                </table>
-                                 <p> (Enter Commas Seperated For Multiple Payrolls.) </p>
+                                 <p> (USE COMMA TO SEPERATE MULTIPLE EMPLOYEE ID.) </p>
 
                          </td>
                    </tr>
      </table>
-    </form>
+    <!--- </form> -->
     
   <%
 =begin 
@@ -101,7 +123,19 @@
 =end
 %>
 
-    <div id="dynamicLoadingPanel"></div>
+  
+	<div id="overlay" align="center">
+     			<span id="image" style="display: none;" valign="top" > <img src="/images/ajax-loader.gif" alt="ajax_loader.gif"  />
+                        					<font color='red'>
+                           							 Loading Please Wait.
+                        					</font>
+                </span>
+	</div>
+
+    
+    			
+       
+    <div id="dynamicLoadingPanel"> </div>
     
 </div>
 
@@ -121,6 +155,18 @@
    
   //}); 
   
+//Export Excel New Option
+function new_excel_export(id,title)
+{
+  results_html = $('export').innerHTML;    
+  results_html = '<html><body></center><table border=2 cellspacing="0" cellpadding="0"><tr><td colspan="9"><center><h3>'+ id +'</h3></td></tr>'+results_html+'</table></body></html>';
+  var input = new Element('input', { 'type': 'hidden','name': 'results[html]','value': results_html});
+  var form = new Element('form', { 'method': 'post','name': 'tempForm','action': "html_to_excel?file_name="+id});
+  form.insert(input);      
+  document.body.appendChild(form);
+  form.submit();   
+}
+// Export to excel option ends here
   
   $(document).ready(function() {
   var date = new Date();
@@ -136,7 +182,7 @@
        // endDate: end,
         autoclose: true
   });
-  
+
   $('#datepicker2').datepicker({
        format: "mm/dd/yyyy",
     // format: "yyyy/mm/dd",
@@ -147,44 +193,47 @@
   });
 
   $('#datepicker1').datepicker('setDate', today);
-  
+
   $('#datepicker2').datepicker('setDate', today1);
 
 });
 
 
- 	$(document).ready(function() {
-   		 $('#navButton').click(function(event){
-     	 //alert(1)
- 	 if ( $("#empid").val() == "" )
- 	 {
- 	 // alert("Payroll is mandatory");
- 	  // event.stop();
- 	  }
- 	 else
- 	 {
-     	 var $loader = $('#image');
-     	// $("#image").show();
-     	 	$.ajax({
-         	url : "/time_reports/search_time_report",
-        	 success: function(data) {
-        	 $("#dynamicLoadingPanel").html(data);
-        	  
-         	},
+
+ 	 $(document).ready(function() {
+         $('#navButton').click(function(event){
+         //alert(1)
+         
+         var $loader = $('#image');
+        // $("#image").show();
+
+                $.ajax({
+                        url : "/time_reports/search_time_report",
+                        type: 'get',
+                        data: 'emp_id=' + $("#empid").val() + '&from_date=' + $("#datepicker1").val() + '&to_date=' + $("#datepicker2").val() + '&emp_lastname=' + $("#emplastName").val()+ '&department_code=' + $("#department_department_id").val() ,
+                        dataType: 'script',
+                 success: function(data) {
+                // $("#dynamicLoadingPanel").html(data);
+
+                },
             beforeSend : function(){
                $loader.show();
             },
-            complete : function(){
+
+            complete : function(data){
+
                $loader.hide();
             }
-      	});
-      	
-      }
-      	  
-     	});
-	});
+        });
+
+    
+
+        });
+        });
+
 
 </script>
+
 
 
 

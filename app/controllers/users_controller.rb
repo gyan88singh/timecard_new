@@ -2,6 +2,7 @@ class UsersController < ApplicationController
   before_filter :authorize
   
   def index
+#raise params.inspect
     #raise params[:page].inspect
          @q = User.ransack(params[:q])
          @users = @q.result.where("domain_name !=?",'').paginate(page: params[:page], per_page: 5).order(id: :desc)
@@ -11,7 +12,9 @@ class UsersController < ApplicationController
        
           format.html 
           format.csv { send_data @userexport.to_csv }
-          format.xls 
+          format.xlsx {
+			response.headers['Content-Disposition'] = 'attachment; filename="all_users.xlsx"'
+		} 
        end
       
   

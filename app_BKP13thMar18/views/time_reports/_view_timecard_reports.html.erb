@@ -1,0 +1,387 @@
+<% if params[:emp_id] == "" %>
+ 	<p align = "center"> <b> Payroll Is Mandatory!!.</b> </p>
+ 	
+<%else%>
+  
+<% @finaltimesarray.each do |timesfinal| %>
+	
+   <% if !timesfinal.nil?  %>
+  		 <div align = "center" > <b>  Time Card Report From Date : <%= params[:from_date] %> to To Date : <%= params[:to_date] %> </b> </div>
+ 		<div align= "right">
+        
+        <b>  <%= link_to image_tag("export.png"),timecard_report_time_reports_path(format: "xls",:emp_id => timesfinal[2].to_i,:from_date => params[:from_date],:to_date => params[:to_date]) %> </b>
+        
+  		</div>
+ 
+  			<% if timesfinal[2].to_i != "" %> 
+
+ 			<table border="0" cellpadding="0" cellspacing="0" style="width:100%" >
+   
+			<tr>
+ 			  		<% empid = timesfinal[2].to_i %>
+ 					<% @emp = Employee.where(PAYROLL: empid).first %>
+ 
+ 					<% @deptimesheet = TimeSheet.where(PAYROLL: empid).first %>
+ 					<% depcentredesc = Department.where('department_code = ?' ,@deptimesheet.CENTRE).pluck(:department_desc) %>
+ 				
+ 					<% 
+ 				  		if depcentredesc.blank?
+ 				  
+ 				    	 	department = @deptimesheet.CENTRE + " " + '-'
+ 				     
+ 				  		else
+ 				   			department = @deptimesheet.CENTRE + " " + '-' + " " + depcentredesc[0]
+ 				  		end
+ 				
+ 					%>
+ 				
+ 				
+              		<td width="40px" bgcolor="#008080" class="whitetext" height="20">
+                  		 <label>Employee Number & Name:&nbsp;&nbsp;&nbsp; <%= @emp.PAYROLL %> , <%= @emp.LAST_NAME.to_s + ' ' + @emp.FIRST_NAME.to_s %> </label>
+              		</td>
+              
+              		<td width="50px" bgcolor="#008080" class="whitetext" height="20">
+              		   <% jobtitledesc = JobTitle.where('job_title_code = ?',@deptimesheet.POS).pluck(:job_title_desc) %>
+              		   
+              		  <% 
+ 				  	 	if jobtitledesc.blank?
+ 				  
+ 				    	 	jobtitle = @deptimesheet.POS + " " + '-'
+ 				     
+ 				  		else
+ 				   			jobtitle = @deptimesheet.POS + " " + '-' + " " + jobtitledesc[0]
+ 				  		end
+ 				
+ 					  %>
+              		
+                   		<label>Job title:&nbsp;&nbsp;&nbsp; <%= jobtitle %> </label>
+              		</td>
+              
+     			<tr>        
+             
+              		<td width="100px" bgcolor="#008080" class="whitetext" height="20">
+                   		<label>Department:&nbsp;&nbsp;&nbsp; <%= @deptimesheet.DEPT_GROUP + " " + department %> </label>
+              		</td>
+              
+              		<td width="100px" bgcolor="#008080" class="whitetext" height="20">
+              		</td>
+      			</tr>
+                         
+			</tr>
+			</table>
+
+			<%end%>
+
+		<div style ="overflow-x:scroll;" class ="scrollable-menu">
+
+
+<% 
+	$i = 0 ;
+	
+	iInOutCount = timesfinal[0].to_i ;
+    arrTimeCard = timesfinal[1]; 
+	
+	#puts arrTimeCard.map{|e| e["attendancedate"]}.inspect;
+ 	arrAttandanceDate = arrTimeCard.map{|e| e["attendancedate"]};
+ 	#iAttendanceCount = strAttandanceDate.count ;
+ 	
+ 	#arrFirstInOut = arrTimeCard.map{|e| e["0"]};
+ 	 headers = arrTimeCard.flat_map(&:keys).uniq
+ 	 
+ 	 rows = arrTimeCard.map(&:values).flatten
+ 	 
+%>
+   	<% if (iInOutCount > 2) %>
+
+		<table cellpadding=5 cellspacing=2 border=1 style="width:150%">
+	
+   	<% else %>
+	 	<table cellpadding=5 cellspacing=2 border=1 style="width:100%">
+	<%end%>
+
+		<tr>
+	        
+       		<th width="5%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> Day / Date </th>
+    
+			<% (0..(iInOutCount-1)).each do |i| %>
+				<th width="5%" height="28" align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> IN </th>
+				<th width="5%" height="28" align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> OUT </th>
+				<!--th width="10%" height="28" align="left"  valign="middle" bgcolor="#0370b5" class="whitetext">TIME</th-->
+			<% end %>
+			
+				<th width="5%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> Total </th>
+				<th width="5%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"></th>
+			
+			
+		</tr>
+		
+		
+		    <% cumulativehrs = 0 %>
+		   <% (0..(arrAttandanceDate.count)-1).each do |k| %>
+		   		 <tr>
+		   		     <% s =  arrTimeCard[k]["attendancedate"].split('|')[0] %>
+		   		     <% d = Date.parse(s) %>
+		   		     
+		   		     <% d1 = d.strftime('%a') %>
+		   		 
+                   	<td width="8%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> <%= d1 %>  <%= d.strftime("%m-%d-%Y") %></td>
+                   
+                   <% strHoursFinal =[] %> <% sum = 0 %> 
+                   
+                   
+                   
+                   	<% (0..(iInOutCount-1)).each do |j| %>
+                   	   
+	    				 <td width="5%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> <%= arrTimeCard[k][j.to_s].blank? ? " " : showtime(arrTimeCard[k][j.to_s].split('-')[0]) %>
+	    				                
+	    				   <%  if (arrTimeCard[k][j.to_s].blank?) %>
+	    				          &nbsp;&nbsp;&nbsp;<%=  " " %>
+	    				         
+	    				    <%   elsif (arrTimeCard[k][j.to_s].split('-')[3] != "null") %>
+	    				          &nbsp;&nbsp;&nbsp; <%= arrTimeCard[k][j.to_s].split('-')[3] %>
+	    				         
+	    				    <%   elsif (arrTimeCard[k][j.to_s].split('-')[3] != nil) %>
+	    				          &nbsp;&nbsp;&nbsp; <%= " " %>
+	    				         
+	    				    <% end %>   
+	    				         
+	    				   
+	    				   
+	    				   
+	    				   </td>
+	    			     <td width="5%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> <%= arrTimeCard[k][j.to_s].blank? ? " " : showtime(arrTimeCard[k][j.to_s].split('-')[1]) %> 
+	    			        <%  if (arrTimeCard[k][j.to_s].blank?) %>
+	    				          &nbsp;&nbsp;&nbsp;<%=  " " %>
+	    				         
+	    				    <%   elsif (arrTimeCard[k][j.to_s].split('-')[3] != "null") %>
+	    				          &nbsp;&nbsp;&nbsp; <%= arrTimeCard[k][j.to_s].split('-')[3] %>
+	    				         
+	    				    <%   elsif (arrTimeCard[k][j.to_s].split('-')[3] != nil) %>
+	    				          &nbsp;&nbsp;&nbsp; <%= " " %>
+	    				         
+	    				    <% end %>		 
+	    			      </td>
+					
+						 <% arrTimeCard[k][j.to_s].blank? ? " " : strHours0 = (arrTimeCard[k][j.to_s].split('-')[2]) %>
+					 
+						 <% strHoursFinal << strHours0.to_i  %>
+					<% end %>
+					
+					<% strHours = strHoursFinal.inject(0){|sum,x| sum + x } %>
+					<% floatHoursFinal = number_with_precision(Float(strHours)/60, precision: 2) %>	
+					
+					<td width="5%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> <%= floatHoursFinal  %>  </td>
+				  	<%
+				  		if (k == 0)
+				  			cumulativehrs = floatHoursFinal.to_f
+				  		elsif (k > 0)
+				  			cumulativehrs = cumulativehrs.to_f + floatHoursFinal.to_f
+				  		end
+				  	%>
+				  	
+					 <td width="5%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> 
+				                 <%= number_with_precision(cumulativehrs, precision: 2) %> </td>
+				</tr>
+
+            <%end%>
+	</table>
+   
+  </div>
+    	<br>
+ 
+			<table cellpadding=5 cellspacing=0 border=1 style="width:100%">
+
+			<% @ArrNonworktime = TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=? and (("CODE") != ? and ("CODE") != ? )',timesfinal[2].to_i,params[:from_date],params[:to_date],'(W)','(X)') %>
+
+
+				<% @ArrNonworktime.each do |timesecond| %>
+		
+		   			<% @Strdesc = PayType.where('pay_code = ?' ,timesecond.CODE).pluck(:pay_code_desc) %>
+             
+  				<tr>
+          
+    				<td width="10%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> Transac:&nbsp;&nbsp;&nbsp;<%= timesecond.PDATE.strftime("%a")%> <%= timesecond.PDATE.strftime("%Y-%m-%d") %> </td>
+    
+    				<td width="10%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> <%= @Strdesc[0] %> </td>
+    	
+    				<td width="10%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> <%= timesecond.DEPT_GROUP  + " " + " " +  timesecond.CENTRE %> </td>
+
+     				<td width="10%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> Amount: </td>
+     	
+     				<td width="10%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> 
+     																			
+    	                                                                              <% @Floathours = Float(timesecond.HOURS)/60 %>
+    	                                                                              
+    	                                                                              <%= number_with_precision(@Floathours,precision: 2) %>  </td>
+  				</tr>
+  
+
+				<% end %>
+
+			</table>
+ 		
+ 			</br>
+ 
+		 <% @Arrdocket = TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=? and "DOCKET" != ? and "DOCKET" != ? ',timesfinal[2].to_i,params[:from_date],params[:to_date],'null','').distinct.pluck(:"DOCKET") %> 
+ 
+ 		<% if (!@Arrdocket.blank? )  %> 
+   
+ 			<table cellpadding=0 cellspacing=0 border=0 style="width:100%">
+   
+      			<tr>
+      
+        		<th width="30%" height="28"  align="left"  valign="middle" bgcolor="#008080" class="whitetext"> Temporary Department</th>
+        
+        		<th width="30%" height="28"  align="left"  valign="middle" bgcolor="#008080" class="whitetext">Category</th>
+        		<th width="20%" height="28" align="left"   valign="middle" bgcolor="#008080" class="whitetext">Type</th>
+        
+        		<th width="20%" height="28" align="left"   valign="middle" bgcolor="#008080" class="whitetext">Amount</th>
+             
+      			</tr>
+      
+      		<% @Arrdocket.each do |arrdocket| %>
+       
+          		 <% @Intdocketwisetime = TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=? and  ("DOCKET")=?',timesfinal[2].to_i,params[:from_date],params[:to_date],arrdocket).pluck("sum (\"HOURS\") as total_hours") %>
+         		 <% docketwisefinaltime = Float(@Intdocketwisetime[0])/60 if !@Intdocketwisetime[0].nil?  %>	
+          
+          		<% @Arrdocketwisecode = TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=? and  ("DOCKET")=?', timesfinal[2].to_i,params[:from_date],params[:to_date],arrdocket).distinct.pluck(:"CODE") %>
+  	              
+  	             
+  	             <% @Arrdocketwisecode.each do |dockettwisecodefinal| %>
+  	             
+  	             	<% @Arrdocketcodedesc = PayType.where('pay_code = ?' ,dockettwisecodefinal).pluck(:pay_code_desc) %>
+  	             
+  	             	<%  @Strdocketcodefinal = @Arrdocketcodedesc.blank? ? dockettwisecodefinal : @Arrdocketcodedesc[0] %>
+          
+           	<tr>
+  	              
+  	         	 <td width="30%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> <%= arrdocket %> </td>
+  	         
+  	          	 <td width="30%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> <%=@Strdocketcodefinal %> </td>
+  	           	 <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> Time </td>
+  	             <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> <%= docketwisefinaltime.blank? ? 0.00 :  number_with_precision(docketwisefinaltime,precision: 2) %>  </td>
+  	             
+  	             
+  	        </tr> 
+  	      		<%end%>
+      		<%end%>
+      
+     	</table>
+	  <%end%>
+
+ 		</br>
+ 		
+ 		<% @Arrdepartment = TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=? and "DEPT_GROUP" is not null and "CENTRE" is not null',timesfinal[2].to_i,params[:from_date],params[:to_date]).distinct.pluck(:"DEPT_GROUP",:"CENTRE") %> 
+ 		
+ 		<table cellpadding=0 cellspacing=0 border=0 style="width:100%">
+   
+     	 <tr>
+      
+        	<th width="30%" height="28"  align="left"  valign="middle" bgcolor="#008080" class="whitetext">Department</th>
+        
+        	<th width="30%" height="28"  align="left"  valign="middle" bgcolor="#008080" class="whitetext">Category</th>
+        	<th width="20%" height="28" align="left"   valign="middle" bgcolor="#008080" class="whitetext">Type</th>
+        
+        	<th width="20%" height="28" align="left"   valign="middle" bgcolor="#008080" class="whitetext">Amount</th>
+           
+      	</tr>
+      
+  	     <% @Arrdepartment.each do |arrdepart| %>
+  	       <tr>
+  	            <% @Strdptdesc = Department.where('department_code = ?' ,arrdepart[1]).pluck(:department_desc) %> 
+  	             <% if @Strdptdesc.blank? %>
+  	             <% departdesc = arrdepart[1]  %>
+  	             <% departfinal = arrdepart[0] + " " + departdesc %>
+  	             
+  	             <%else%>
+  	             
+  	             <%  @Arrdepartdesc = @Strdptdesc %>
+  	             <% departfinal = arrdepart[0] + " " + @Arrdepartdesc[0] %>
+  	             
+  	             <%end%>
+  	            
+  	             <% @Arrdepartwisecode = TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=? and  ("DEPT_GROUP")=? and ("CENTRE") =?',timesfinal[2].to_i,params[:from_date],params[:to_date],arrdepart[0],arrdepart[1]).distinct.pluck(:"CODE") %>
+  	              
+  	             
+  	             <% @Arrdepartwisecode.each do |departwisecodefinal| %>
+  	             
+  	             <% @Arrcodedesc = PayType.where('pay_code = ?' ,departwisecodefinal).pluck(:pay_code_desc) %>
+  	             
+  	             <%  @Strcodefinal = @Arrcodedesc.blank? ? departwisecodefinal : @Arrcodedesc[0] %>
+  	           
+  	             
+         	     <% regulardataregular =  TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=? and  ("DEPT_GROUP")=? and ("CENTRE") =?  and ("CODE")=? ',timesfinal[2].to_i,params[:from_date],params[:to_date],arrdepart[0],arrdepart[1],departwisecodefinal).pluck("sum (\"HOURS\") as total_hours") %>
+			     <% regulardatatimeregular = Float(regulardataregular[0])/60 if !regulardataregular[0].nil?  %>		
+					
+              	<tr>
+  	              
+  	         	 <td width="30%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> <%= departfinal %> </td>
+  	         
+  	          	 <td width="30%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> <%= @Strcodefinal  %> </td>
+  	           	 <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> Time </td>
+  	             <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> <%= regulardatatimeregular.blank? ? 0.00 :  number_with_precision(regulardatatimeregular,precision: 2) %>  </td>
+  	             
+  	             
+  	         	</tr> 
+  	         
+  	         <%end%>  
+  	    	</tr> 
+  	        
+  	  	<% end %>
+  	 
+  		</table>
+  	  
+  	   </br>
+  	   
+  	   <table cellpadding=0 cellspacing=0 border=0 style="width:100%">
+  			 	 <tr>
+         		     <th width="20%" height="28"  align="center" bgcolor="#008080" class="whitetext"> Employee Total </th>
+         		     <th width="20%" height="28"  align="left"  valign="middle" bgcolor="#008080" class="whitetext"> </th>
+        			 <th width="15%" height="28" align="left"   valign="middle" bgcolor="#008080" class="whitetext"> </th>
+        
+        			 <th width="15%" height="28" align="left"   valign="middle" bgcolor="#008080" class="whitetext"> </th>
+
+         		 </tr>
+  			  	<% @ArrPaytypecode = TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=?',timesfinal[2].to_i,params[:from_date],params[:to_date]).distinct.pluck(:"CODE") %>
+				<% @ArrPaytypecode.each do |arrpaytypecodefinal| %>
+  			
+  	       		 <% employeetotalregular =  TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=?  and ("CODE")=? ',timesfinal[2].to_i,params[:from_date],params[:to_date],arrpaytypecodefinal).pluck("sum (\"HOURS\") as total_hours") %>
+  
+         		 <% employeetotaltimeregular = Float(employeetotalregular[0])/60 if !employeetotalregular[0].nil?  %>
+         		 
+         		 <% @empcodedesc = PayType.where('pay_code = ?' ,arrpaytypecodefinal).pluck(:pay_code_desc) %>
+  	             
+  	             <%  @Strempcodefinal = @empcodedesc.blank? ? arrpaytypecodefinal : @empcodedesc[0] %>
+         		 
+         		 
+			 
+  	         	<tr>    
+  	         	 <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> <%=@Strempcodefinal%> </td>
+  	           	 <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> Time </td>
+  	             <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> <%= employeetotaltimeregular.blank? ? 0.00 :  number_with_precision(employeetotaltimeregular,precision: 2) %>  </td>
+  	             <td width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext"> </td>
+
+  	      	 	</tr>
+  	      	  
+  	      	 <%end%>
+  	       		
+  	       	 
+  	      </table>
+  	      
+  	</br>
+  	</br>
+  	
+  
+ <%else%>
+      
+ 		<p align = "center"> <b> No Records Found From Date : <%= params[:from_date] %> to To Date : <%= params[:to_date]%> </b> </p>
+ <%end%>
+  
+ <%end%>
+           
+ <%end%>
+
+ 
+  
+ 
+

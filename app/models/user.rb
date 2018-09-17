@@ -13,8 +13,8 @@ class User < ActiveRecord::Base
    # validates_presence_of :email
    # validates :email, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i }
    # validates_uniqueness_of :email
-    validates_presence_of :domain_name
-    validates_uniqueness_of :domain_name
+ #   validates_presence_of :domain_name
+  #  validates_uniqueness_of :domain_name
     
  # validates_uniqueness_of :user_name
     

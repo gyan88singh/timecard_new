@@ -6,27 +6,63 @@ class TimeSheet < ActiveRecord::Base
    require 'rubygems'
    require 'uri'  # Needed to prevent a NameError on URI
    require 'fileutils'
- 
+   require 'net/ftp' 
   
-  def self.import_excel_sheet
+def self.import_excel_sheet_ftp
+   
+   puts "list of files on ftp server"
+
+   
+ #url = 'ftp.infinxinc.com'
+ #username = 'Cycloshare'
+ #passwd = "Cyclo@123"
+ 
+ 
+ directory = '/To TIS/ARS/times_excel/'
+ localfile = 'public/times_excel/'
+ 
+ ftp=Net::FTP.new
+ ftp.connect(host = FTP_HOST , port = FTP_PORT)
+ ftp.login(user = FTP_USERNAME , passwd = FTP_PASSWORD) 
+
+ ftp.chdir(directory)
+ ftp.binary = true
+ ftp.passive = true
+ 
+ filenames = ftp.nlst('*.xls') 
+ 
+ filenames.each {|filename| 
+  puts filename.inspect
+  ftp.getbinaryfile(filename,localfile + filename)
+  ftp.delete(filename) 
+}
+ 
+ftp.close
+
+end  
+
+
+
+def self.import_excel_sheet
     
-    puts "file to be opened"
+    puts "file to be opened from application folder"
    
     # RuntimeError: "[\"public/times_excel/Book1.xls\",\"public/times_excel/Book2.xls\ "]"
     #file = File.join(RAILS_ROOT, 'public', 'Book1.xls')
     
-#    files_list = Dir['smb://172.28.48.68/Suhasd_Intranet/RadNet/AttendanceReportingSystem/dump/*'] 
-# files_list = Dir['/home/root1/excel data/dump/*']
-   files_list = Dir['public/times_excel/*']
- 
- #   raise files_list.inspect    
+    files_list = Dir['public/times_excel/*']   
+	if !files_list.nil?  
       files_list.each do |files| 
            # spreadsheet = Roo::Spreadsheet.open('public/times_excel/Book1.xls')
             spreadsheet = Roo::Spreadsheet.open(files)                                                                                   
             puts "file opened"     
             
-              header = spreadsheet.row(5)
-            puts "file read"
+             spreadno = spreadsheet.first_row
+            
+          if (spreadno == 5)
+             
+            header = spreadsheet.row(5)
+            puts "file read 5"
                if header == ["WORKED_ID", "ID", "PAYROLL", "PDATE", "SHIFT", "ON_TIME", "OFF_TIME", "CODE", "CODE_TYPE", "LINE_NO", "PAY_TYPE", "DEPT_GROUP", "DEPARTMENT", "CENTRE", "POS", "DOCKET", "QUANTITY", "STD_RATE", "HOURS", "HOUR_TYPE", "NO_OT_REC", "JOB_PREM", "AM_PREM_HR", "PM_PREM_HR", "CALC_FLAG", "STATUS", "WAS_LL", "OT_TYPE", "NOERASE", "CLK_ON", "CLK_OFF", "UDF1", "UDF2", "NOTE", "CENTRE1", "POS1", "RDOCKET", "TDEFAULT", "FLAG1", "FLAG2", "FLAG3", "FLAG4", "FLAG5", "RATE", "AM_PREM_RATE", "PM_PREM_RATE", "JOB_ID", "UDF_KEY", "OPERATION", "UDF3", "UDF4", "PIECE_RATE", "WORK_ORDER_ID", "WORK_ITEM_ID", "WOI_CONTROL", "APPROVED_STATUS", "APPROVED_BY", "APPROVED_TIME", "EXT_ATTR_1", "EXT_ATTR_2", "EXT_ATTR_3", "EXT_ATTR_4", "EXT_ATTR_5", "EXT_ATTR_6", "EWA_1", "EWA_2", "EWA_3", "EWA_4", "EWA_5", "EWA_6", "EWA_7", "EWA_8", "EWA_9", "EWA_10", "EWA_11", "EWA_12", "EWA_13", "EWA_14", "EWA_15", "EWA_16", "EWA_17", "EWA_18", "EWA_19", "EWA_20"]
               
                
@@ -40,12 +76,43 @@ class TimeSheet < ActiveRecord::Base
                  end
                 
                end
-             puts "file read complete"
+             puts "file read complete5"
              
-              FileUtils.cp files, 'smb://172.28.48.68/suhasd_intranet/RadNet/AttendanceReportingSystem/done'
+              FileUtils.cp files, 'public/times_completed_excel'
    
-    
               File.delete(files) if File.exist?(files)
+              
+        elsif (spreadno == 1)
+              header = spreadsheet.row(1)
+              puts "file read 1"
+                if header == ["WORKED_ID", "ID", "PAYROLL", "PDATE", "SHIFT", "ON_TIME", "OFF_TIME", "CODE", "CODE_TYPE", "LINE_NO", "PAY_TYPE", "DEPT_GROUP", "DEPARTMENT", "CENTRE", "POS", "DOCKET", "QUANTITY", "STD_RATE", "HOURS", "HOUR_TYPE", "NO_OT_REC", "JOB_PREM", "AM_PREM_HR", "PM_PREM_HR", "CALC_FLAG", "STATUS", "WAS_LL", "OT_TYPE", "NOERASE", "CLK_ON", "CLK_OFF", "UDF1", "UDF2", "NOTE", "CENTRE1", "POS1", "RDOCKET", "TDEFAULT", "FLAG1", "FLAG2", "FLAG3", "FLAG4", "FLAG5", "RATE", "AM_PREM_RATE", "PM_PREM_RATE", "JOB_ID", "UDF_KEY", "OPERATION", "UDF3", "UDF4", "PIECE_RATE", "WORK_ORDER_ID", "WORK_ITEM_ID", "WOI_CONTROL", "APPROVED_STATUS", "APPROVED_BY", "APPROVED_TIME", "EXT_ATTR_1", "EXT_ATTR_2", "EXT_ATTR_3", "EXT_ATTR_4", "EXT_ATTR_5", "EXT_ATTR_6", "EWA_1", "EWA_2", "EWA_3", "EWA_4", "EWA_5", "EWA_6", "EWA_7", "EWA_8", "EWA_9", "EWA_10", "EWA_11", "EWA_12", "EWA_13", "EWA_14", "EWA_15", "EWA_16", "EWA_17", "EWA_18", "EWA_19", "EWA_20"]
+                       
+                       (2..spreadsheet.last_row).each do |i|
+                  
+                        puts i.inspect
+                                row = Hash[[header, spreadsheet.row(i)].transpose]
+                                timesheet = find_by(WORKED_ID: row["WORKED_ID"]) || new
+                                timesheet.attributes = row.to_hash
+                                timesheet.save!
+                           end
+                          
+                         end
+                       puts "file read complete1"
+                       
+                        FileUtils.cp files, 'public/times_completed_excel'
+             
+                        File.delete(files) if File.exist?(files)
+                        
+          else 
+                      puts "file read complete not done"
+                            
+                             FileUtils.cp files, 'public/times_completed_excel_not_done'
+                  
+                             File.delete(files) if File.exist?(files)
+
+          
+        end
+               
                 
       end
       
@@ -60,7 +127,7 @@ class TimeSheet < ActiveRecord::Base
       
         #FileUtils.rm_rf Dir['public/times_excel/*']
 
-    
+     end
   end
    
    def self.import(file)

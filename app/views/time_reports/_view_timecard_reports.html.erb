@@ -1,5 +1,15 @@
-<% if params[:emp_id] == "" %>
- 	<p align = "center"> <b> Payroll Is Mandatory!!.</b> </p>
+<% if (params[:emp_id] == "" &&  params[:emp_lastname] == "" && params[:department_code] == "" ) %>
+ 	<p align = "center" style="color:red;"> <b> PLEASE ENTER EMPLOYEE ID OR EMPLOYEE LAST NAME OR DEPARTMENT..</b> </p>
+ 	
+ <% elsif (!params[:emp_id].blank? &&  !params[:emp_lastname].blank? && !params[:department_code].blank?) %>
+ 	<p align = "center" style="color:red;"> <b> PLEASE ENTER EITHER EMPLOYEE ID OR EMPLOYEE LAST NAME OR DEPARTMENT..</b> </p>
+ 	
+  
+  <% elsif !params[:emp_lastname].blank? && @finaltimesarray == [] %>
+      <p align = "center" style="color:red;"> <b> No Records Found From Date : <%= params[:from_date] %> to To Date : <%= params[:to_date]%> </b> </p>
+ 	
+ <% elsif !params[:department_code].blank? && @finaltimesarray == [] %>
+      <p align = "center" style="color:red;"> <b> No Records Found From Date : <%= params[:from_date] %> to To Date : <%= params[:to_date]%> </b> </p>
  	
 <%else%>
   
@@ -7,54 +17,119 @@
 	
    <% if !timesfinal.nil?  %>
   		 <div align = "center" > <b>  Time Card Report From Date : <%= params[:from_date] %> to To Date : <%= params[:to_date] %> </b> </div>
- 		<div align= "right">
-        
-        <b>  <%= link_to image_tag("export.png"),timecard_report_time_reports_path(format: "xls",:emp_id => timesfinal[2].to_i,:from_date => params[:from_date],:to_date => params[:to_date]) %> </b>
-        
-  		</div>
+ 		
  
   			<% if timesfinal[2].to_i != "" %> 
 
- 			<table border="0" cellpadding="0" cellspacing="0" style="width:100%" >
-   
-			<tr>
+ 			
  			  		<% empid = timesfinal[2].to_i %>
  					<% @emp = Employee.where(PAYROLL: empid).first %>
+ 					
+ 					<%
+ 						emp_name = @emp.LAST_NAME.to_s + ' ' + @emp.FIRST_NAME.to_s
+ 					%>
  
  					<% @deptimesheet = TimeSheet.where(PAYROLL: empid).first %>
- 					<% depcentre = Department.where('department_code = ?' ,@deptimesheet.CENTRE).pluck(:department_desc) %>
+ 					<% depcentredesc = Department.where('department_code = ?' ,@deptimesheet.CENTRE).pluck(:department_desc) %>
  				
  					<% 
- 				  		if depcentre.blank?
+ 				  		if depcentredesc.blank?
  				  
- 				    	 ss = @deptimesheet.CENTRE
+ 				    	 	department = @deptimesheet.CENTRE + " " + '-'
  				     
- 				  	else
- 				   		ss = depcentre[0]
- 				  	end
+ 				  		else
+ 				   			department = @deptimesheet.CENTRE + " " + '-' + " " + depcentredesc[0]
+ 				  		end
  				
  					%>
+ 					
+ 					
+ 					
+ 					<%
+ 						if @emp.HIRE_DATE.blank?
+ 						      hireDate = ""
+ 						else
+ 							  hireDate = @emp.HIRE_DATE.strftime("%m-%d-%Y")
+ 						end
+ 					
+ 					%>
+ 					
+ 					<%
+ 						if @emp.TERM_DATE.blank?
+ 						      termDate = ""
+ 						else
+ 							  termDate = @emp.TERM_DATE.strftime("%m-%d-%Y")
+ 						end
+ 					
+ 					%>
+ 					
+ 					<% jobtitledesc = JobTitle.where('job_title_code = ?',@deptimesheet.POS).pluck(:job_title_desc) %>
+              		   
+              		  <% 
+ 				  	 	if jobtitledesc.blank?
+ 				  
+ 				    	 	jobtitle = @deptimesheet.POS + " " + '-'
+ 				     
+ 				  		else
+ 				   			jobtitle = @deptimesheet.POS + " " + '-' + " " + jobtitledesc[0]
+ 				  		end
  				
+ 					  %>
+ 					
+ 					 
+ 					
+ 					
+ 			<div align= "right">
+        
+			<b>  <%= link_to image_tag("export.png"),timecard_report_time_reports_path(format: "xlsx",:emp_id => timesfinal[2].to_i,:from_date => params[:from_date]             ,:to_date => params[:to_date],:emp_name => emp_name ,:hire_date => hireDate , :term_date => termDate ,:job_title => jobtitle ,:department => department),
+                      :title=>"TimeSheet" %> 
+
+			<%= link_to image_tag("export.png"),sumtotal_timecard_report_time_reports_path(format: "xlsx",:emp_id => timesfinal[2].to_i,
+				:from_date => params[:from_date],:to_date => params[:to_date]),:title=> "SumTotalTimeSheet" %>
+		    </b>
+
+  			
+        
+  			</div>
  				
-              		<td width="40px" bgcolor="#008080" class="whitetext" height="20">
-                  		 <label>Employee Number & Name:&nbsp;&nbsp;&nbsp; <%= @emp.PAYROLL %> , <%= @emp.LAST_NAME.to_s + ' ' + @emp.FIRST_NAME.to_s %> </label>
+ 				<table border="0" cellpadding="0" cellspacing="0" style="width:100%" id="export">
+   
+				<tr>
+              		<td width="200px" bgcolor="#008080" class="whitetext" height="20">
+                  		 <label>Employee ID & Name:&nbsp;&nbsp;&nbsp; <%= @emp.PAYROLL %> , <%= emp_name %> </label>
+              		</td>
+              		
+              		<td width="5px" bgcolor="#008080" class="whitetext" height="20">
+                  		 <label>Hire Date: &nbsp;&nbsp; <%= hireDate %> </label>
+              		</td>
+              		
+              		<td width="5px" bgcolor="#008080" class="whitetext" height="20">
+                  		 <label>Term Date: &nbsp;&nbsp;&nbsp; <%= termDate %> </label>
               		</td>
               
-              		<td width="50px" bgcolor="#008080" class="whitetext" height="20">
-                   		<label>Job title:&nbsp;&nbsp;&nbsp; <%= @deptimesheet.POS %> </label>
-              		</td>
+              	</tr>	
               
-     			<tr>        
+     			<tr>    
+     			
+     				   
              
-              		<td width="100px" bgcolor="#008080" class="whitetext" height="20">
-                   		<label>Department:&nbsp;&nbsp;&nbsp; <%= @deptimesheet.DEPT_GROUP + " " + ss %> </label>
+              		<td width="10px" bgcolor="#008080" class="whitetext" height="20">
+                   		<label>Department:&nbsp;&nbsp;&nbsp; <%= @deptimesheet.DEPT_GROUP + " " + department %> </label>
               		</td>
               
+              	
+              		
+              		<td width="10px" bgcolor="#008080" class="whitetext" height="20">
+              		   
+              			<label>Job title:&nbsp;&nbsp;&nbsp; <%= jobtitle %> </label>
+              		</td> 
+              		
               		<td width="100px" bgcolor="#008080" class="whitetext" height="20">
               		</td>
+              		
       			</tr>
                          
-			</tr>
+			
 			</table>
 
 			<%end%>
@@ -358,10 +433,11 @@
   	</br>
   	</br>
   	
-  
+  <% elsif timesfinal.nil? &&  !params[:emp_lastname].blank?  %>  
+
  <%else%>
       
- 		<p align = "center"> <b> No Records Found From Date : <%= params[:from_date] %> to To Date : <%= params[:to_date]%> </b> </p>
+ 		<p align = "center" style="color:red;"> <b> No Records Found From Date : <%= params[:from_date] %> to To Date : <%= params[:to_date]%> </b> </p>
  <%end%>
   
  <%end%>
@@ -369,6 +445,11 @@
  <%end%>
 
  
+  <script>
+  	$( function() {
+    		$( document ).tooltip();
+  	} );
+  </script>
   
  
 

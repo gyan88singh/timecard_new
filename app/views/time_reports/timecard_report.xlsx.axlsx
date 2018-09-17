@@ -1,0 +1,265 @@
+#raise timesfinal[0].inspect
+
+
+require 'axlsx'
+
+ @finaltimesarray.each do |timesfinal|
+ 	
+	$i = 0 ;
+	
+	iInOutCount = timesfinal[0].to_i ;
+    arrTimeCard = timesfinal[1]; 
+	
+	#puts arrTimeCard.map{|e| e["attendancedate"]}.inspect;
+ 	arrAttandanceDate = arrTimeCard.map{|e| e["attendancedate"]};
+ 	#iAttendanceCount = strAttandanceDate.count ;
+ 	
+ 	#arrFirstInOut = arrTimeCard.map{|e| e["0"]};
+ 	 headers = arrTimeCard.flat_map(&:keys).uniq
+ 	 
+ 	 rows = arrTimeCard.map(&:values).flatten
+
+
+	xlsx_package = Axlsx::Package.new
+	wb = xlsx_package.workbook
+	wb.styles do |style|
+  		highlight_cell = style.add_style(bg_color: "EFC376", border: Axlsx::STYLE_THIN_BORDER, sz: 10)
+  		date_cell = style.add_style(bg_color: "EFC376" , format_code: "yyyy-mm-dd", border: Axlsx::STYLE_THIN_BORDER, sz: 10)
+  
+  		heading = style.add_style alignment: {horizontal: :center}, b: true,sz: 8, bg_color: "0066CC", fg_color: "FF"
+  		
+  		highlight_cell_time = style.add_style(bg_color: "EFC376",
+                                 border: Axlsx::STYLE_THIN_BORDER,
+                                 alignment: { horizontal: :center },
+                                 format_code: "HH-MM")
+  		
+  		data = style.add_style alignment: {wrap_text: true}
+
+	wb.add_worksheet(name: "sheet1") do |sheet|
+  		# this is the head row of your spreadsheet
+  		
+		 sheet.add_row ["Time Card Report From Date : #{params[:from_date]} and To Date : #{params[:to_date]}"], style: heading
+		
+  	 	sheet.add_row ["Employee ID: #{params[:emp_id]}, Employee Name: #{params[:emp_name]}, Department: #{params[:department]}"], style: heading
+  		
+  		 sheet.add_row ["Hire Date: #{params[:hire_date]}, Term_Date: #{params[:term_date]}, Job Tittle: #{params[:job_title]}"], style: heading
+  		
+		
+  		sheet.add_row
+  		r = sheet.add_row ["Day / Date"], style: heading
+  		
+  		(0..(iInOutCount-1)).each do |i|
+  			r.add_cell  (value = 'In'), style: heading 
+  			r.add_cell (value = 'Out'), style: heading  
+  		end
+  		
+  		r.add_cell (value = "Total"), style: heading
+  		
+  		r.add_cell (value = "Sub Total"), style: heading
+  		
+  		cumulativehrs = 0
+  		
+  		(0..(arrAttandanceDate.count)-1).each do |k|
+  			s =  arrTimeCard[k]["attendancedate"].split('|')[0]
+  			d = Date.parse(s)
+  			date = d.strftime("%m-%d-%Y")
+  			day = d.strftime('%a')
+  			
+  			dayDate = day + ' ' + ' ' + ' ' + date
+  			#raise d1.inspect
+  			
+  			dayDateRow = sheet.add_row  [dayDate ] , style: [highlight_cell] 
+  			
+  			strHoursFinal = [] 
+  			
+  			  sum = 0  
+  			
+  			(0..(iInOutCount-1)).each do |j|
+  			
+  					  if (arrTimeCard[k][j.to_s].blank?) 
+	    				        tempDepartment0 = " "
+	    				         
+	    			 elsif (arrTimeCard[k][j.to_s].split('-')[3] != "null") 
+	    				         tempDepartment0 =  arrTimeCard[k][j.to_s].split('-')[3] 
+	    				         
+	    			 elsif (arrTimeCard[k][j.to_s].split('-')[3] != nil) 
+	    				           tempDepartment0 = " " 
+	    				         
+	    			 end 
+  			if  tempDepartment0.nil?
+  				dayDateRow.add_cell  (value = arrTimeCard[k][j.to_s].blank? ? " " : showtime(arrTimeCard[k][j.to_s].split('-')[0]))  , style: highlight_cell
+  			else
+  				dayDateRow.add_cell  (value = arrTimeCard[k][j.to_s].blank? ? " " : showtime(arrTimeCard[k][j.to_s].split('-')[0]) + ' ' + ' ' + tempDepartment0)  , style: highlight_cell
+
+  			end	
+  					 if (arrTimeCard[k][j.to_s].blank?) 
+	    				          tempDepartment1 = " " 
+	    				         
+	    			 elsif (arrTimeCard[k][j.to_s].split('-')[3] != "null") 
+	    				           tempDepartment1 = arrTimeCard[k][j.to_s].split('-')[3] 
+	    				         
+	    			 elsif (arrTimeCard[k][j.to_s].split('-')[3] != nil) 
+	    				           tempDepartment1 = " " 
+	    				         
+	    			 end 
+  				
+  				if  tempDepartment1.nil?
+  					dayDateRow.add_cell  (value = arrTimeCard[k][j.to_s].blank? ? " " : showtime(arrTimeCard[k][j.to_s].split('-')[1]))  , style: highlight_cell
+  				else
+  				    dayDateRow.add_cell  (value = arrTimeCard[k][j.to_s].blank? ? " " : showtime(arrTimeCard[k][j.to_s].split('-')[1])+ ' ' + ' ' + tempDepartment1)  , style: highlight_cell
+
+  				end
+  				
+  				
+  				arrTimeCard[k][j.to_s].blank? ? " " : strHours0 = (arrTimeCard[k][j.to_s].split('-')[2])
+  				#raise strHours0 .inspect
+  				strHoursFinal << strHours0.to_i 
+  				
+  			end
+  			
+  				strHours = strHoursFinal.inject(0) { |sum,value| sum + value }
+  				 
+  				floatHoursFinal = number_with_precision(Float(strHours)/60, precision: 2)
+  				
+  				dayDateRow.add_cell (value = floatHoursFinal) , style: highlight_cell
+  				
+  				if (k == 0)
+				  	cumulativehrs = floatHoursFinal.to_f
+				elsif (k > 0)
+				  	cumulativehrs = cumulativehrs.to_f + floatHoursFinal.to_f
+				end
+				
+				cumulativehrsFinal = number_with_precision(cumulativehrs, precision: 2)
+				
+				dayDateRow.add_cell (value = cumulativehrsFinal) , style: highlight_cell
+  			 
+  			
+  		end
+  		
+  		sheet.add_row
+  		
+  		
+		@ArrNonworktime = TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=? and (("CODE") != ? and ("CODE") != ? )',timesfinal[2].to_i,params[:from_date],params[:to_date],'(W)','(X)')   		 
+  		 	@ArrNonworktime.each do |timesecond|
+  		 		@Strdesc = PayType.where('pay_code = ?' ,timesecond.CODE).pluck(:pay_code_desc)
+  		 		
+  		 	r1 = sheet.add_row
+  		 		timesecondPDATE = timesecond.PDATE.strftime("%a")
+  		 		
+  		 		transactimesecond =    timesecondPDATE + timesecond.PDATE.strftime("%Y-%m-%d")
+  		 		transactimesecondfinal = "Transac:" + ' ' + transactimesecond
+  		 		
+  		 		r1.add_cell (value = transactimesecondfinal), style: highlight_cell
+  		 		
+  		 		r1.add_cell (value = @Strdesc[0]), style: highlight_cell
+  		 		
+  		 		r1.add_cell (value = timesecond.DEPT_GROUP  + " " + " " +  timesecond.CENTRE), style: highlight_cell
+  		 		
+  		 		#r1.add_cell (value = Amount:), style: highlight_cell
+  		 		
+  		 		@Floathours = Float(timesecond.HOURS)/60
+  		 		@Floathoursfinal = number_with_precision(@Floathours,precision: 2)
+  		 		
+  		 		r1.add_cell (value = 'Amount:'), style: highlight_cell
+  		 		
+  		 		r1.add_cell (value = @Floathoursfinal), style: highlight_cell
+  		 	
+  		 	end
+  		 	
+  		sheet.add_row
+  		
+  		  
+  		  @Arrdocket = TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=? and "DOCKET" != ? and "DOCKET" != ? ',timesfinal[2].to_i,params[:from_date],params[:to_date],'null','').distinct.pluck(:"DOCKET") 
+ 		
+ 		  if (!@Arrdocket.blank? )
+ 		  		r2 = sheet.add_row
+ 		  		
+ 		  		r2.add_cell (value =  'Temporary Department' ), style: heading
+ 		  		r2.add_cell (value =  'Category' ), style: heading
+ 		  		r2.add_cell (value =  'Type' ), style: heading
+ 		  		r2.add_cell (value =  'Amount' ), style: heading
+ 		  		
+ 		  		@Arrdocket.each do |arrdocket|
+ 		  		
+ 		  			@Intdocketwisetime = TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=? and  ("DOCKET")=?',timesfinal[2].to_i,params[:from_date],params[:to_date],arrdocket).pluck("sum (\"HOURS\") as total_hours") 
+ 		  			docketwisefinaltime = Float(@Intdocketwisetime[0])/60 if !@Intdocketwisetime[0].nil?
+ 		  			@Arrdocketwisecode = TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=? and  ("DOCKET")=?', timesfinal[2].to_i,params[:from_date],params[:to_date],arrdocket).distinct.pluck(:"CODE")
+ 		  			
+ 		  			@Arrdocketwisecode.each do |dockettwisecodefinal|
+ 		  				@Arrdocketcodedesc = PayType.where('pay_code = ?' ,dockettwisecodefinal).pluck(:pay_code_desc)
+ 		  				@Strdocketcodefinal = @Arrdocketcodedesc.blank? ? dockettwisecodefinal : @Arrdocketcodedesc[0]
+ 		  				
+ 		  				r21 = sheet.add_row [arrdocket ] , style: [highlight_cell] 
+ 		  				r21.add_cell (value = @Strdocketcodefinal), style: highlight_cell
+ 		  				r21.add_cell (value = 'Time'), style: highlight_cell
+ 		  				r21.add_cell (value = docketwisefinaltime.blank? ? 0.00 :  number_with_precision(docketwisefinaltime,precision: 2)), style: highlight_cell
+ 		  				
+ 		  				
+ 		  			end
+ 		  		end
+ 		  		
+ 		  end	## if end		
+ 		  
+ 		  sheet.add_row
+  		 
+  		  
+  		  @Arrdepartment = TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=? and "DEPT_GROUP" is not null and "CENTRE" is not null',timesfinal[2].to_i,params[:from_date],params[:to_date]).distinct.pluck(:"DEPT_GROUP",:"CENTRE") 
+  		  
+  		  r3 = sheet.add_row
+  		  		r3.add_cell (value =  'Department' ), style: heading
+ 		  		r3.add_cell (value =  'Category' ), style: heading
+ 		  		r3.add_cell (value =  'Type' ), style: heading
+ 		  		r3.add_cell (value =  'Amount' ), style: heading
+ 		  		
+ 		  	@Arrdepartment.each do |arrdepart|
+ 		  		@Strdptdesc = Department.where('department_code = ?' ,arrdepart[1]).pluck(:department_desc)
+ 		  		if @Strdptdesc.blank?
+ 		  			departdesc = arrdepart[1]
+ 		  			departfinal = arrdepart[0] + " " + departdesc
+ 		  		else
+ 		  			@Arrdepartdesc = @Strdptdesc
+ 		  			departfinal = arrdepart[0] + " " + @Arrdepartdesc[0]
+ 		  		end
+ 		  		@Arrdepartwisecode = TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=? and  ("DEPT_GROUP")=? and ("CENTRE") =?',timesfinal[2].to_i,params[:from_date],params[:to_date],arrdepart[0],arrdepart[1]).distinct.pluck(:"CODE")
+ 		  	
+ 		  			@Arrdepartwisecode.each do |departwisecodefinal|
+ 		  				@Arrcodedesc = PayType.where('pay_code = ?' ,departwisecodefinal).pluck(:pay_code_desc)
+ 		  				@Strcodefinal = @Arrcodedesc.blank? ? departwisecodefinal : @Arrcodedesc[0]
+ 		  				regulardataregular =  TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=? and  ("DEPT_GROUP")=? and ("CENTRE") =?  and ("CODE")=? ',timesfinal[2].to_i,params[:from_date],params[:to_date],arrdepart[0],arrdepart[1],departwisecodefinal).pluck("sum (\"HOURS\") as total_hours")
+ 		  					regulardatatimeregular = Float(regulardataregular[0])/60 if !regulardataregular[0].nil?
+ 		  					r31 = sheet.add_row [departfinal ] , style: [highlight_cell]
+ 		  					r31.add_cell (value = @Strcodefinal), style: highlight_cell
+ 		  					r31.add_cell (value = 'Time'), style: highlight_cell
+ 		  					r31.add_cell (value = regulardatatimeregular.blank? ? 0.00 :  number_with_precision(regulardatatimeregular,precision: 2)), style: highlight_cell
+ 		  			
+ 		  			end
+ 		  	
+ 		  	end  ##  @Arrdepartment end
+ 		  	
+ 		  sheet.add_row
+  		  	
+  		  	r4 = sheet.add_row
+ 		  			r4.add_cell (value =  'Employee Total' ), style: heading
+ 		  			r4.add_cell (value =  '' ), style: heading
+ 		  			r4.add_cell (value =  '' ), style: heading
+ 		  			
+ 		  		@ArrPaytypecode = TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=?',timesfinal[2].to_i,params[:from_date],params[:to_date]).distinct.pluck(:"CODE")
+ 		  		
+ 		  		@ArrPaytypecode.each do |arrpaytypecodefinal|
+ 		  			employeetotalregular =  TimeSheet.where('("PAYROLL") = ? and date("CLK_ON") >=? and date("CLK_OFF") <=?  and ("CODE")=? ',timesfinal[2].to_i,params[:from_date],params[:to_date],arrpaytypecodefinal).pluck("sum (\"HOURS\") as total_hours")
+ 		  			employeetotaltimeregular = Float(employeetotalregular[0])/60 if !employeetotalregular[0].nil? 
+ 		  			@empcodedesc = PayType.where('pay_code = ?' ,arrpaytypecodefinal).pluck(:pay_code_desc)
+ 		  			@Strempcodefinal = @empcodedesc.blank? ? arrpaytypecodefinal : @empcodedesc[0]
+ 		  			
+ 		  			r41 = sheet.add_row [@Strempcodefinal ] , style: [highlight_cell]
+ 		  			r41.add_cell (value = 'Time'), style: highlight_cell
+ 		  			r41.add_cell (value = employeetotaltimeregular.blank? ? 0.00 :  number_with_precision(employeetotaltimeregular,precision: 2)), style: highlight_cell
+ 		  			
+ 		  		end
+		
+	end
+	
+	
+end
+	
+end

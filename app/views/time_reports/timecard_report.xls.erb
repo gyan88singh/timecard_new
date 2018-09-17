@@ -29,19 +29,32 @@
  				  end
  				
  				%>
+
+				<% jobtitledesc = JobTitle.where('job_title_code = ?',@deptimesheet.POS).pluck(:job_title_desc) %>
+              		   
+              		  		<% 
+ 				  	 	if jobtitledesc.blank?
+ 				  
+ 				    	 	jobtitle = @deptimesheet.POS + " " + '-'
+ 				     
+ 				  		else
+ 				   			jobtitle = @deptimesheet.POS + " " + '-' + " " + jobtitledesc[0]
+ 				  		end
+ 				
+ 					  %>
  				
  				
-              <Row>
-                 <Cell><Data ss:Type="String">
-                    <%= @emp.PAYROLL %> , <%= @emp.LAST_NAME.to_s + ' ' + @emp.FIRST_NAME.to_s %> 
-                 </Data></Cell>
-        	  </Row>
+              	<Row>
+                	 <Cell><Data ss:Type="String">
+                    			<%= @emp.PAYROLL %> , <%= @emp.LAST_NAME.to_s + ' ' + @emp.FIRST_NAME.to_s %> 
+                 	</Data></Cell>
+        	 </Row>
               
-             <Row> 
-                <Cell><Data ss:Type="String">
-                 Job_title:   <%= @deptimesheet.POS %>       Department:  <%= @deptimesheet.DEPT_GROUP + " " + ss %> 
-              </Data></Cell>
- 			</Row>
+             	<Row> 
+                	<Cell><Data ss:Type="String">
+                 	   		Job title:&nbsp;&nbsp;&nbsp; <%= jobtitle %>     Department:  <%= @deptimesheet.DEPT_GROUP + " " + ss %> 
+              		</Data></Cell>
+ 		</Row>
 	<%end%>
 	
 	<Row> </Row>

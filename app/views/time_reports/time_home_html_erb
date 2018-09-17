@@ -1,0 +1,188 @@
+<div class ='container'>
+ <%#= search_form_for @time_sheet, url: time_home_path, method: :post do |f| %>
+
+   <table border="0" cellspacing="0" cellpadding="0" width="100%" class="tblmain">
+              <tr>
+                  <td align="left" class="heading" style="padding-top: 10px;">
+                                    <strong>Time Card Report</strong>
+                   </td>
+               </tr>
+               <tr>
+                    <td style="background: #62B4CC; color: #FFF; padding: 10px;">
+                          <table border="0" cellpadding="0" cellspacing="0">
+                              <tr>
+                                   <td width="7%">
+                                                <label>From Date</label>
+                                   </td>
+                                   <td width="8%" style="color: #6D6D6D !important;">
+      
+                                             <input type="text" id="datepicker1" name="from_date" data-provide='datepicker'>
+                                     </td>
+                                    <td width="6%">
+                                               <label>To Date</label>
+                                     </td>
+                                     <td width="10%" style="color: #6D6D6D !important;">
+                                            <input type="text" id="datepicker2" name="to_date" data-provide='datepicker'>
+                                      </td>
+                                   
+                                </tr>
+                                
+                               
+                                
+                                <tr>
+                    <!---                <td width="7%">
+                                                <label>Emp Name</label>
+                                    </td>
+                                    <td width="8%" style="color: #6D6D6D !important;">
+      
+                                             <input type="text" id="empname" name="emp_name" >
+                                     </td>  -->
+                                     
+                                    <td width="6%">
+                                            <span class="mandatory_color" style="color:red">*</span>   <label>  Employee ID </label>
+                                     </td>
+                                     <td width="10%" style="color: #6D6D6D !important;">
+                                            <input type="text" id="empid" name="emp_id">  
+                                      </td>
+                                         
+                                      <td width="10%" align="left">
+                                            <%#= image_submit_tag 'search.png' %>
+                                            <input alt="Search" src="/images/search.png" type="image" id="navButton">
+                                      </td>
+                                      
+                                      <td>
+                    					<span id="image" style="display: none;" valign="top" align="right"><img src="/images/ajax-loader.gif" alt="ajax_loader.gif"/>
+                        					<font color='red'>
+                           					 Loading Please Wait.
+                        					</font>
+                    					</span>
+                					 </td>
+                                </tr>
+                                
+                              
+                               </table>
+                                 <p> (Enter Commas Seperated For Multiple  Employee ID.) </p>
+
+                         </td>
+                   </tr>
+     </table>
+    
+  <%
+=begin 
+%>    
+  <div id ="rptcontainer"> 
+      
+  <table cellpadding=5 cellspacing=0 border=1 style="width:100%">
+   
+      <tr>
+      
+        <th width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext">Employee name</th>
+        
+        <th width="20%" height="28"  align="left"  valign="middle" bgcolor="#0370b5" class="whitetext">Day / Date</th>
+        <th width="15%" height="28" align="left"   valign="middle" bgcolor="#0370b5" class="whitetext">In</th>
+        
+        <th width="15%" height="28" align="left"   valign="middle" bgcolor="#0370b5" class="whitetext">Department</th>
+       
+        <th width="15%" height="28" align="left"   valign="middle" bgcolor="#0370b5" class="whitetext">Out</th>
+       
+        <th width="15%" height="28" align="left"   valign="middle" bgcolor="#0370b5" class="whitetext">Totals</th>
+                
+      </tr>
+
+    
+  </table>
+   
+
+</div>
+
+ <%
+=end
+%>
+
+    <div id="dynamicLoadingPanel"></div>
+    
+</div>
+
+<script>
+
+//  $(document).ready(function(){
+    
+   // $.fn.datepicker.defaults.format = "mm/dd/yyyy";
+  //  $('.datepicker').datepicker({
+ //   alert(1);
+  //    format: 'dd/mm/yyyy',
+  //    startDate: '-3d',
+  //    todayBtn: true,
+  //    todayHighlight: true,
+  //    defaultViewDate: today
+//});
+   
+  //}); 
+  
+  
+  $(document).ready(function() {
+  var date = new Date();
+  var today = new Date(date.getFullYear(), date.getMonth()-1, date.getDate());
+  var today1 = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  var end = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+  $('#datepicker1').datepicker({
+        format: "mm/dd/yyyy",
+       // format: "yyyy/mm/dd",
+        todayHighlight: true,
+       // startDate: today,
+       // endDate: end,
+        autoclose: true
+  });
+  
+  $('#datepicker2').datepicker({
+       format: "mm/dd/yyyy",
+    // format: "yyyy/mm/dd",
+       todayHighlight: true,
+     //  startDate: today,
+     //  endDate: end,
+       autoclose: true
+  });
+
+  $('#datepicker1').datepicker('setDate', today);
+  
+  $('#datepicker2').datepicker('setDate', today1);
+
+});
+
+
+ 	$(document).ready(function() {
+                 $('#navButton').click(function(event){
+         //alert(1)
+         
+         var $loader = $('#image');
+        // $("#image").show();
+     
+                $.ajax({
+                	url : "/time_reports/search_time_report",
+               		type: 'get',
+               		data: 'emp_id=' + $("#empid").val() + '&from_date=' + $("#datepicker1").val() + '&to_date=' + $("#datepicker2").val(),
+               		dataType: 'script',
+                 success: function(data) {
+                // $("#dynamicLoadingPanel").html(data);
+
+                },
+            beforeSend : function(){
+               $loader.show();
+            },
+
+            complete : function(data){
+
+               $loader.hide();
+            }
+        });
+
+      
+
+        });
+        });
+
+</script>
+
+
+

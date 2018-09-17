@@ -115,7 +115,8 @@ Rails.application.routes.draw do
   resources :time_reports do
     collection do
      match 'search_time_report' => 'time_reports#search_time_report', via: [:get, :post], as: :search_time_report
-      get :timecard_report
+      	get :timecard_report
+	get :sumtotal_timecard_report
     end
    end  
   get "time_home" => 'time_reports#time_home'
